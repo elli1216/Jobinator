@@ -1,19 +1,13 @@
 import { createServerFn } from '@tanstack/react-start'
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 
-import { getClient } from '@/db'
+import { prisma } from '@/db'
 
 const getTodos = createServerFn({
   method: 'GET',
 }).handler(async () => {
-  const client = await getClient()
-  if (!client) {
-    return undefined
-  }
-  return (await client.query(`SELECT * FROM todos`)) as Array<{
-    id: number
-    title: string
-  }>
+  const client = prisma
+  return await client.todo.findMany()
 })
 
 const insertTodo = createServerFn({
@@ -21,11 +15,8 @@ const insertTodo = createServerFn({
 })
   .inputValidator((d: { title: string }) => d)
   .handler(async ({ data }) => {
-    const client = await getClient()
-    if (!client) {
-      return undefined
-    }
-    await client.query(`INSERT INTO todos (title) VALUES ($1)`, [data.title])
+    const client = prisma
+    await client.todo.create({ data: { title: data.title } })
   })
 
 export const Route = createFileRoute('/demo/neon')({

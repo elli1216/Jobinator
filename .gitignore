@@ -15,3 +15,5 @@ todos.json
 # Prisma
 prisma/dev.db
 src/generated/*
+# Local Netlify folder
+.netlify

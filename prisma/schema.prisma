@@ -18,6 +18,12 @@ enum ApplicationStatus {
   No_Response
 }
 
+model Todo {
+  id        Int      @id @default(autoincrement())
+  title     String
+  createdAt DateTime @default(now())
+}
+
 model Applications {
   uuid         String            @id @default(uuid())
   company_name String
