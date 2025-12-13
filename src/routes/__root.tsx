@@ -8,18 +8,9 @@ import { TanStackDevtools } from '@tanstack/react-devtools'
 
 import Header from '../features/common/components/Header'
 
-import {
-  Sidebar,
-  SidebarContent,
-  SidebarHeader,
-  SidebarInset,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
-  SidebarProvider,
-} from '../components/ui/sidebar'
+import { AppSidebar } from '../features/common/components/AppSidebar'
+import { SidebarInset, SidebarProvider } from '../components/ui/sidebar'
 import TanStackQueryDevtools from '../integrations/tanstack-query/devtools'
-
 
 import ClerkProvider from '../integrations/clerk/provider'
 
@@ -27,7 +18,7 @@ import appCss from '../styles.css?url'
 
 import type { QueryClient } from '@tanstack/react-query'
 
-import { ThemeProvider } from '../features/common/components/theme-provider';
+import { ThemeProvider } from '../features/common/components/theme-provider'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -62,7 +53,7 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
         <p>Not Found</p>
       </div>
     )
-  }
+  },
 })
 
 function RootDocument({ children }: { children: React.ReactNode }) {
@@ -72,23 +63,10 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         <HeadContent />
       </head>
       <body>
-        <ThemeProvider defaultTheme='system' storageKey='vite-ui-theme'>
+        <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
           <ClerkProvider>
             <SidebarProvider>
-              <Sidebar collapsible='icon' >
-                <SidebarHeader>
-                  Navigation
-                </SidebarHeader>
-                <SidebarContent>
-                  <SidebarMenu>
-                    <SidebarMenuItem>
-                      <SidebarMenuButton>
-                        Link 1
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  </SidebarMenu>
-                </SidebarContent>
-              </Sidebar>
+              <AppSidebar />
               <SidebarInset>
                 <Header />
                 {children}
