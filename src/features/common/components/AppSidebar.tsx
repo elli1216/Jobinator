@@ -26,14 +26,18 @@ const items = [
 ]
 
 export function AppSidebar() {
-
   return (
     <Sidebar collapsible="offcanvas">
       <SidebarContent>
         <SidebarMenu className="pt-4 px-2 gap-4" aria-label="Main Menu">
           {items.map((item) => (
             <SidebarMenuItem key={item.title}>
-              <SidebarMenuButton className='p-2' asChild variant="outline" size="default">
+              <SidebarMenuButton
+                className="p-2"
+                asChild
+                variant="outline"
+                size="default"
+              >
                 <a href={item.url}>
                   <item.icon className="ml-1 h-8 w-8" />
                   <span>{item.title}</span>

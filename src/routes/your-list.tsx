@@ -8,7 +8,7 @@ export const Route = createFileRoute('/your-list')({
 function RouteComponent() {
   return (
     <HomeLayout>
-      <div className='p-4'>Hello "/your-list"!</div>
+      <div className="p-4">Hello "/your-list"!</div>
     </HomeLayout>
   )
 }
