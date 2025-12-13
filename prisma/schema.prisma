@@ -43,17 +43,8 @@ model Applications {
 model Users {
   uuid      String   @id @default(uuid())
   email     String   @unique
-  password  String
+  full_name  String
   createdAt DateTime @default(now())
-}
-
-model Sessions {
-  uuid      String   @id @default(uuid())
-  userId    String
-  token     String   @unique
-  createdAt DateTime @default(now())
-
-  @@index([userId])
 }
 
 model JobTypes {
