@@ -5,23 +5,12 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  // url      = env("DATABASE_URL")
-}
-
-enum ApplicationStatus {
-  To_Apply
-  Applied
-  Interviewing
-  Offered
-  Rejected
-  Accepted
-  No_Response
 }
 
 model Todo {
-  id        Int      @id @default(autoincrement())
-  title     String
-  createdAt DateTime @default(now())
+  id        Int     @id @default(autoincrement())
+  createdAt String? @db.VarChar(250)
+  title     String? @db.VarChar
 }
 
 model Applications {
@@ -43,12 +32,22 @@ model Applications {
 model Users {
   uuid      String   @id @default(uuid())
   email     String   @unique
-  full_name  String
   createdAt DateTime @default(now())
+  full_name String
 }
 
 model JobTypes {
   uuid      String   @id @default(uuid())
   name      String   @unique
   createdAt DateTime @default(now())
+}
+
+enum ApplicationStatus {
+  To_Apply
+  Applied
+  Interviewing
+  Offered
+  Rejected
+  Accepted
+  No_Response
 }
