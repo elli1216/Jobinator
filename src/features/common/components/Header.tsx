@@ -16,6 +16,11 @@ export default function Header() {
           <div className="flex items-center gap-4">
             {isSignedIn && <SidebarTrigger />}
             <h1 className="text-xl font-semibold">
+              <img
+                src="/jobinator.png"
+                alt="Jobinator Logo"
+                className="inline-block h-8 w-8 mr-2"
+              />
               <Link to="/">Jobinator</Link>
             </h1>
           </div>
