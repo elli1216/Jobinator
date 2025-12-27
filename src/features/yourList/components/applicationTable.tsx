@@ -11,7 +11,7 @@ import {
 } from '@/features/yourList/server/application.server'
 import { FileX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useNavigate, useRouter } from '@tanstack/react-router'
+import { useNavigate } from '@tanstack/react-router'
 import {
   Select,
   SelectContent,
@@ -22,7 +22,7 @@ import {
   SelectLabel
 } from '@/components/ui/select'
 import { ApplicationStatus } from '@/generated/prisma/enums'
-import { useMutation } from '@tanstack/react-query'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 
 const columnHelper = createColumnHelper<Application>()
@@ -34,12 +34,12 @@ const StatusCell = ({
   status: ApplicationStatus
   applicationId: string
 }) => {
-  const router = useRouter()
+  const queryClient = useQueryClient()
 
   const { mutate, isPending } = useMutation({
     mutationFn: updateApplicationStatus,
     onSuccess: async () => {
-      await router.invalidate()
+      await queryClient.invalidateQueries({ queryKey: ['applications'] })
       toast.success('Status updated successfully')
     },
     onError: () => {
