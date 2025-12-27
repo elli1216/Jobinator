@@ -1,17 +1,11 @@
 import { createServerFn } from '@tanstack/react-start'
 import { prisma } from '@/db'
-import { z } from 'zod'
-
-const userSchema = z.object({
-  clerkId: z.string(),
-  email: z.string().email(),
-  fullName: z.string().optional(),
-})
+import { userSchema } from '../schema/user.schema'
 
 export const syncUser = createServerFn({
   method: 'POST',
 })
-  .validator((data: unknown) => userSchema.parse(data))
+  .inputValidator((data: unknown) => userSchema.parse(data))
   .handler(async ({ data }) => {
     const { clerkId, email, fullName } = data
 
@@ -19,7 +13,7 @@ export const syncUser = createServerFn({
       where: { clerkId },
       update: {
         email,
-        full_name: fullName || undefined,
+        full_name: fullName,
       },
       create: {
         clerkId,

@@ -7,7 +7,7 @@ export function UserSync() {
 
   useEffect(() => {
     const sync = async () => {
-      if (isLoaded && isSignedIn && user) {
+      if (user) {
         const primaryEmail = user.primaryEmailAddress?.emailAddress
         if (!primaryEmail) return
 
@@ -16,7 +16,7 @@ export function UserSync() {
             data: {
               clerkId: user.id,
               email: primaryEmail,
-              fullName: user.fullName || undefined,
+              fullName: user.fullName || 'Unnamed User',
             },
           })
         } catch (error) {
