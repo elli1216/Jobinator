@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
@@ -18,12 +18,41 @@ import { createServerFn } from '@tanstack/react-start'
 import { prisma } from '@/db'
 import { ApplicationStatus } from '@/generated/prisma/enums'
 import { Loading } from '@/features/common/components/Loading'
+import { useAuth } from '../hooks/use-auth'
+import { z } from 'zod'
 
 const getJobTypes = createServerFn({
   method: 'GET',
 }).handler(async () => {
   return await prisma.jobTypes.findMany()
 })
+
+const addJob = createServerFn({ method: 'POST' })
+  .inputValidator((data: unknown) =>
+    applicationSchema.extend({ clerkId: z.string() }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    const user = await prisma.users.findUnique({
+      where: { clerkId: data.clerkId },
+    })
+
+    if (!user) {
+      throw new Error('User not found')
+    }
+
+    return await prisma.applications.create({
+      data: {
+        company_name: data.company_name,
+        job_title: data.job_title,
+        date_applied: new Date(data.date_applied),
+        status: data.status,
+        job_link: data.job_link || '',
+        notes: data.notes || '',
+        jobTypeId: data.jobTypeId,
+        userId: user.uuid,
+      },
+    })
+  })
 
 export const Route = createFileRoute('/add-job')({
   component: RouteComponent,
@@ -36,6 +65,8 @@ export const Route = createFileRoute('/add-job')({
 
 function RouteComponent() {
   const { jobTypes } = Route.useLoaderData()
+  const { user } = useAuth()
+  const navigate = useNavigate()
   const {
     register,
     handleSubmit,
@@ -54,9 +85,21 @@ function RouteComponent() {
     },
   })
 
-  const onSubmit = (data: ApplicationSchema) => {
-    // API call will be added here later
-    console.log('Form data is valid:', data)
+  const onSubmit = async (data: ApplicationSchema) => {
+    if (!user?.id) return
+
+    try {
+      await addJob({
+        data: {
+          ...data,
+          clerkId: user.id,
+        },
+      })
+      navigate({ to: '/your-list' })
+    } catch (error) {
+      console.log(data)
+      console.error('Failed to add job:', error)
+    }
   }
 
   return (

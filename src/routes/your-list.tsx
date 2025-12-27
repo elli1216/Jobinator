@@ -8,7 +8,7 @@ const getApplicationList = createServerFn({
   method: 'GET',
 }).handler(async () => {
   const jobs = (await prisma.applications.findMany({
-    orderBy: { createdAt: 'desc' },
+    orderBy: { date_applied: 'desc' },
   }));
   return jobs
 })
