@@ -1,31 +1,9 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { createServerFn } from '@tanstack/react-start'
-import { prisma } from '@/db'
 import { Loading } from '@/features/common/components/Loading'
 import ApplicationTable from '../features/yourList/components/applicationTable'
 import { useAuth } from '@/hooks/use-auth'
-import { z } from 'zod'
 import { useQuery } from '@tanstack/react-query'
-
-const getApplicationList = createServerFn({
-  method: 'GET',
-})
-  .inputValidator((clerkId: string) => z.string().parse(clerkId))
-  .handler(async ({ data: clerkId }) => {
-    const user = await prisma.users.findUnique({
-      where: { clerkId },
-    })
-
-    if (!user) return []
-
-    const jobs = await prisma.applications.findMany({
-      where: { userId: user.uuid },
-      orderBy: { date_applied: 'desc' },
-    })
-    return jobs
-  })
-
-export type Application = Awaited<ReturnType<typeof getApplicationList>>[number]
+import { getApplicationList } from '../features/yourList/server/application.server'
 
 export const Route = createFileRoute('/your-list')({
   component: RouteComponent,
