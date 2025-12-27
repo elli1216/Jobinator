@@ -21,6 +21,10 @@ const columns = [
     header: 'Job Title',
     cell: (info) => info.getValue(),
   }),
+  columnHelper.accessor('jobType.name', {
+    header: 'Job Type',
+    cell: (info) => info.getValue(),
+  }),
   columnHelper.accessor('date_applied', {
     header: 'Date Applied',
     cell: (info) => new Date(info.getValue()).toLocaleDateString(),

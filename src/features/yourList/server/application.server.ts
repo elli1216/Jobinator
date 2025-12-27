@@ -15,6 +15,7 @@ export const getApplicationList = createServerFn({
 
     const jobs = await prisma.applications.findMany({
       where: { userId: user.uuid },
+      include: { jobType: true },
       orderBy: { date_applied: 'desc' },
     })
     return jobs
