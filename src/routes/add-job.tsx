@@ -1,5 +1,4 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { HomeLayout } from '../features/common/components/HomeLayout'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Button } from '@/components/ui/button'
@@ -18,6 +17,7 @@ import {
 import { createServerFn } from '@tanstack/react-start'
 import { prisma } from '@/db'
 import { ApplicationStatus } from '@/generated/prisma/enums'
+import { Loading } from '@/features/common/components/Loading'
 
 const getJobTypes = createServerFn({
   method: 'GET',
@@ -31,7 +31,7 @@ export const Route = createFileRoute('/add-job')({
     const jobTypes = await getJobTypes()
     return { jobTypes }
   },
-  pendingComponent: () => <div>Loading...</div>,
+  pendingComponent: () => <Loading />,
 })
 
 function RouteComponent() {
@@ -60,160 +60,158 @@ function RouteComponent() {
   }
 
   return (
-    <HomeLayout>
-      <div className="flex justify-center w-full">
-        <div className="p-4 w-full md:w-2/3">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+    <div className="flex justify-center w-full">
+      <div className="p-4 w-full md:w-2/3">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+          <div>
+            <label
+              htmlFor="company_name"
+              className="block text-sm font-medium"
+            >
+              Company Name
+            </label>
+            <Input
+              id="company_name"
+              {...register('company_name')}
+              className="mt-1"
+            />
+            {errors.company_name && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors.company_name.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="job_title" className="block text-sm font-medium">
+              Job Title
+            </label>
+            <Input
+              id="job_title"
+              {...register('job_title')}
+              className="mt-1"
+            />
+            {errors.job_title && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors.job_title.message}
+              </p>
+            )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div>
               <label
-                htmlFor="company_name"
+                htmlFor="date_applied"
                 className="block text-sm font-medium"
               >
-                Company Name
+                Date Applied
               </label>
               <Input
-                id="company_name"
-                {...register('company_name')}
+                type="date"
+                id="date_applied"
+                {...register('date_applied')}
                 className="mt-1"
               />
-              {errors.company_name && (
+              {errors.date_applied && (
                 <p className="text-sm text-red-600 mt-1">
-                  {errors.company_name.message}
+                  {errors.date_applied.message}
                 </p>
               )}
             </div>
 
             <div>
-              <label htmlFor="job_title" className="block text-sm font-medium">
-                Job Title
-              </label>
-              <Input
-                id="job_title"
-                {...register('job_title')}
-                className="mt-1"
-              />
-              {errors.job_title && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors.job_title.message}
-                </p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <div>
-                <label
-                  htmlFor="date_applied"
-                  className="block text-sm font-medium"
-                >
-                  Date Applied
-                </label>
-                <Input
-                  type="date"
-                  id="date_applied"
-                  {...register('date_applied')}
-                  className="mt-1"
-                />
-                {errors.date_applied && (
-                  <p className="text-sm text-red-600 mt-1">
-                    {errors.date_applied.message}
-                  </p>
-                )}
-              </div>
-
-              <div>
-                <label htmlFor="status" className="block text-sm font-medium">
-                  Status
-                </label>
-                <Controller
-                  control={control}
-                  name="status"
-                  render={({ field }) => (
-                    <Select onValueChange={field.onChange} value={field.value}>
-                      <SelectTrigger className="mt-1 w-full">
-                        <SelectValue placeholder="Select a status" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Object.values(ApplicationStatus).map((status) => (
-                          <SelectItem key={status} value={status}>
-                            {status.replace(/_/g, ' ')}
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
-                  )}
-                />
-                {errors.status && (
-                  <p className="text-sm text-red-600 mt-1">
-                    {errors.status.message}
-                  </p>
-                )}
-              </div>
-            </div>
-
-            <div>
-              <label htmlFor="job_link" className="block text-sm font-medium">
-                Job Link
-              </label>
-              <Input id="job_link" {...register('job_link')} className="mt-1" />
-              {errors.job_link && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors.job_link.message}
-                </p>
-              )}
-            </div>
-
-            <div>
-              <label htmlFor="jobTypeId" className="block text-sm font-medium">
-                Job Type
+              <label htmlFor="status" className="block text-sm font-medium">
+                Status
               </label>
               <Controller
                 control={control}
-                name="jobTypeId"
+                name="status"
                 render={({ field }) => (
                   <Select onValueChange={field.onChange} value={field.value}>
                     <SelectTrigger className="mt-1 w-full">
-                      <SelectValue placeholder="Select a job type" />
+                      <SelectValue placeholder="Select a status" />
                     </SelectTrigger>
                     <SelectContent>
-                      {jobTypes?.map((type) => (
-                        <SelectItem key={type.uuid} value={type.uuid}>
-                          {type.name}
+                      {Object.values(ApplicationStatus).map((status) => (
+                        <SelectItem key={status} value={status}>
+                          {status.replace(/_/g, ' ')}
                         </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
                 )}
               />
-              {errors.jobTypeId && (
+              {errors.status && (
                 <p className="text-sm text-red-600 mt-1">
-                  {errors.jobTypeId.message}
+                  {errors.status.message}
                 </p>
               )}
             </div>
+          </div>
 
-            <div>
-              <label htmlFor="notes" className="block text-sm font-medium">
-                Notes
-              </label>
-              <textarea
-                id="notes"
-                rows={4}
-                {...register('notes')}
-                className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
-              />
-              {errors.notes && (
-                <p className="text-sm text-red-600 mt-1">
-                  {errors.notes.message}
-                </p>
+          <div>
+            <label htmlFor="job_link" className="block text-sm font-medium">
+              Job Link
+            </label>
+            <Input id="job_link" {...register('job_link')} className="mt-1" />
+            {errors.job_link && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors.job_link.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <label htmlFor="jobTypeId" className="block text-sm font-medium">
+              Job Type
+            </label>
+            <Controller
+              control={control}
+              name="jobTypeId"
+              render={({ field }) => (
+                <Select onValueChange={field.onChange} value={field.value}>
+                  <SelectTrigger className="mt-1 w-full">
+                    <SelectValue placeholder="Select a job type" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {jobTypes?.map((type) => (
+                      <SelectItem key={type.uuid} value={type.uuid}>
+                        {type.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               )}
-            </div>
+            />
+            {errors.jobTypeId && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors.jobTypeId.message}
+              </p>
+            )}
+          </div>
 
-            <div>
-              <Button type="submit">Add Application</Button>
-            </div>
-          </form>
-        </div>
+          <div>
+            <label htmlFor="notes" className="block text-sm font-medium">
+              Notes
+            </label>
+            <textarea
+              id="notes"
+              rows={4}
+              {...register('notes')}
+              className="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md"
+            />
+            {errors.notes && (
+              <p className="text-sm text-red-600 mt-1">
+                {errors.notes.message}
+              </p>
+            )}
+          </div>
+
+          <div>
+            <Button type="submit">Add Application</Button>
+          </div>
+        </form>
       </div>
-    </HomeLayout>
+    </div>
   )
 }

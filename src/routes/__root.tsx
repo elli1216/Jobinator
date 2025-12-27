@@ -19,6 +19,7 @@ import { UserSync } from '../features/auth/components/UserSync'
 import type { QueryClient } from '@tanstack/react-query'
 import { Button } from '@/components/ui/button'
 import { Loading } from '@/features/common/components/Loading'
+import { HomeLayout } from '@/features/common/components/HomeLayout'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -75,20 +76,22 @@ function RootDocument({ children }: { children: React.ReactNode }) {
         {mounted ? (
           <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <ClerkProvider>
-              <UserSync />
-              {children}
-              <TanStackDevtools
-                config={{
-                  position: 'bottom-right',
-                }}
-                plugins={[
-                  {
-                    name: 'Tanstack Router',
-                    render: <TanStackRouterDevtoolsPanel />,
-                  },
-                  TanStackQueryDevtools,
-                ]}
-              />
+              <HomeLayout>
+                <UserSync />
+                {children}
+                <TanStackDevtools
+                  config={{
+                    position: 'bottom-right',
+                  }}
+                  plugins={[
+                    {
+                      name: 'Tanstack Router',
+                      render: <TanStackRouterDevtoolsPanel />,
+                    },
+                    TanStackQueryDevtools,
+                  ]}
+                />
+              </HomeLayout>
             </ClerkProvider>
           </ThemeProvider>
         ) : <Loading />}
