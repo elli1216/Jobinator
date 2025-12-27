@@ -2,6 +2,7 @@ import { createServerFn } from '@tanstack/react-start'
 import { prisma } from '@/db'
 import { applicationSchema } from '../schema/addJob.schema'
 import { z } from 'zod'
+import { ApplicationStatus } from '@/generated/prisma/enums'
 
 export const getJobTypes = createServerFn({
   method: 'GET',
@@ -33,5 +34,48 @@ export const addJob = createServerFn({ method: 'POST' })
         jobTypeId: data.jobTypeId,
         userId: user.uuid,
       },
+    })
+  })
+
+export const editJob = createServerFn({ method: 'POST' })
+  .inputValidator((data: unknown) =>
+    applicationSchema.extend({ applicationId: z.string() }).parse(data),
+  )
+  .handler(async ({ data }) => {
+    return await prisma.applications.update({
+      where: { uuid: data.applicationId },
+      data: {
+        company_name: data.company_name,
+        job_title: data.job_title,
+        date_applied: new Date(data.date_applied),
+        status: data.status,
+        job_link: data.job_link || '',
+        notes: data.notes || '',
+        jobTypeId: data.jobTypeId,
+      },
+    })
+  })
+
+export const changeJobStatus = createServerFn({ method: 'POST' })
+  .inputValidator((data: unknown) =>
+    z
+      .object({
+        applicationId: z.string(),
+        status: z.enum(ApplicationStatus),
+      })
+      .parse(data),
+  )
+  .handler(async ({ data }) => {
+    return await prisma.applications.update({
+      where: { uuid: data.applicationId },
+      data: { status: data.status },
+    })
+  })
+
+export const deleteJob = createServerFn({ method: 'POST' })
+  .inputValidator((applicationId: string) => z.string().parse(applicationId))
+  .handler(async ({ data: applicationId }) => {
+    return await prisma.applications.delete({
+      where: { uuid: applicationId },
     })
   })
