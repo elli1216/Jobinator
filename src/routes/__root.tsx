@@ -12,11 +12,11 @@ import ClerkProvider from '../integrations/clerk/provider'
 
 import appCss from '../styles.css?url'
 
-import type { QueryClient } from '@tanstack/react-query'
 
 import { ThemeProvider } from '../features/common/components/theme-provider'
-import { Button } from '@/components/ui/button'
 import { UserSync } from '../features/auth/components/UserSync'
+import type { QueryClient } from '@tanstack/react-query'
+import { Button } from '@/components/ui/button'
 
 interface MyRouterContext {
   queryClient: QueryClient
