@@ -19,8 +19,11 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
+  SelectLabel
 } from '@/components/ui/select'
 import { ApplicationStatus } from '@/generated/prisma/enums'
+import { useMutation } from '@tanstack/react-query'
+import { toast } from 'sonner'
 
 const columnHelper = createColumnHelper<Application>()
 
@@ -33,20 +36,30 @@ const StatusCell = ({
 }) => {
   const router = useRouter()
 
-  const handleValueChange = async (newStatus: ApplicationStatus) => {
-    await updateApplicationStatus({
-      data: { applicationId, status: newStatus },
-    })
-    router.invalidate()
+  const { mutate, isPending } = useMutation({
+    mutationFn: updateApplicationStatus,
+    onSuccess: async () => {
+      await router.invalidate()
+      toast.success('Status updated successfully')
+    },
+    onError: () => {
+      toast.error('Failed to update status')
+      console.error('Failed to update status')
+    },
+  })
+
+  const handleValueChange = (newStatus: ApplicationStatus) => {
+    mutate({ data: { applicationId, status: newStatus } })
   }
 
   return (
-    <Select value={status} onValueChange={handleValueChange}>
+    <Select value={status} onValueChange={handleValueChange} disabled={isPending}>
       <SelectTrigger className="w-fit">
         <SelectValue placeholder={status} />
       </SelectTrigger>
       <SelectContent>
         <SelectGroup>
+          <SelectLabel>Change Status</SelectLabel>
           {Object.values(ApplicationStatus).map((s) => (
             <SelectItem key={s} value={s}>
               {s}
@@ -150,9 +163,9 @@ export default function ApplicationTable({
                   {header.isPlaceholder
                     ? null
                     : flexRender(
-                        header.column.columnDef.header,
-                        header.getContext(),
-                      )}
+                      header.column.columnDef.header,
+                      header.getContext(),
+                    )}
                 </th>
               ))}
             </tr>

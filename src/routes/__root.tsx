@@ -21,6 +21,7 @@ import { Loading } from '@/features/common/components/Loading'
 import { HomeLayout } from '@/features/common/components/HomeLayout'
 import NotFound from '@/features/common/components/NotFound'
 import ErrorComponent from '@/features/common/components/Error'
+import { Toaster } from '@/components/ui/sonner'
 
 interface MyRouterContext {
   queryClient: QueryClient
@@ -74,6 +75,7 @@ function RootDocument() {
           <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <ClerkProvider>
               <HomeLayout>
+                <Toaster position="top-center" />
                 <UserSync />
                 <Outlet />
                 <TanStackDevtools
