@@ -26,11 +26,13 @@ export default function Header() {
           </div>
           <div className="flex items-center gap-2">
             <ModeToggle />
-            {isSignedIn && (<SignOutButton>
-              <Button variant="outline">
-                <LogOut className="h-4 w-4" />
-              </Button>
-            </SignOutButton>)}
+            {isSignedIn && (
+              <SignOutButton>
+                <Button variant="outline">
+                  <LogOut className="h-4 w-4" />
+                </Button>
+              </SignOutButton>
+            )}
           </div>
         </div>
       </header>

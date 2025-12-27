@@ -16,5 +16,4 @@ export default function ErrorComponent({ error }: { error: Error }) {
       </Button>
     </div>
   )
-
 }

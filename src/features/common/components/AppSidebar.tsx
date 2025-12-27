@@ -27,12 +27,12 @@ const items = [
 ]
 
 export function AppSidebar() {
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const redirectTo = (to: string) => {
     navigate({
-      to
-    });
+      to,
+    })
   }
 
   return (

@@ -72,10 +72,7 @@ function RouteComponent() {
       <div className="p-4 w-full md:w-2/3">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div>
-            <label
-              htmlFor="company_name"
-              className="block text-sm font-medium"
-            >
+            <label htmlFor="company_name" className="block text-sm font-medium">
               Company Name
             </label>
             <Input
@@ -94,11 +91,7 @@ function RouteComponent() {
             <label htmlFor="job_title" className="block text-sm font-medium">
               Job Title
             </label>
-            <Input
-              id="job_title"
-              {...register('job_title')}
-              className="mt-1"
-            />
+            <Input id="job_title" {...register('job_title')} className="mt-1" />
             {errors.job_title && (
               <p className="text-sm text-red-600 mt-1">
                 {errors.job_title.message}

@@ -5,12 +5,58 @@ import {
   useReactTable,
 } from '@tanstack/react-table'
 import { fuzzyFilter } from '@/features/common/utils/table.utils'
-import { Application } from '@/features/yourList/server/application.server'
+import {
+  Application,
+  updateApplicationStatus,
+} from '@/features/yourList/server/application.server'
 import { FileX } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useNavigate } from '@tanstack/react-router';
+import { useNavigate, useRouter } from '@tanstack/react-router'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import { ApplicationStatus } from '@/generated/prisma/enums'
 
 const columnHelper = createColumnHelper<Application>()
+
+const StatusCell = ({
+  status,
+  applicationId,
+}: {
+  status: ApplicationStatus
+  applicationId: string
+}) => {
+  const router = useRouter()
+
+  const handleValueChange = async (newStatus: ApplicationStatus) => {
+    await updateApplicationStatus({
+      data: { applicationId, status: newStatus },
+    })
+    router.invalidate()
+  }
+
+  return (
+    <Select value={status} onValueChange={handleValueChange}>
+      <SelectTrigger className="w-fit">
+        <SelectValue placeholder={status} />
+      </SelectTrigger>
+      <SelectContent>
+        <SelectGroup>
+          {Object.values(ApplicationStatus).map((s) => (
+            <SelectItem key={s} value={s}>
+              {s}
+            </SelectItem>
+          ))}
+        </SelectGroup>
+      </SelectContent>
+    </Select>
+  )
+}
 
 const columns = [
   columnHelper.accessor('company_name', {
@@ -31,25 +77,49 @@ const columns = [
   }),
   columnHelper.accessor('status', {
     header: 'Status',
-    cell: (info) => info.getValue(),
+    cell: (info) => (
+      <StatusCell
+        status={info.getValue()}
+        applicationId={info.row.original.uuid}
+      />
+    ),
   }),
   columnHelper.accessor('job_link', {
     header: 'Job Link',
     cell: (info) => {
       const url = info.getValue()
       return url ? (
-        <a href={url} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">{url}</a>
-      ) : "Not provided"
-    }
+        <a
+          href={url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-blue-600 hover:underline"
+        >
+          {url}
+        </a>
+      ) : (
+        'Not provided'
+      )
+    },
   }),
   columnHelper.accessor('updatedAt', {
     header: 'Updated At',
-    cell: (info) => <span>{info.getValue() ? new Date(info.getValue()!).toLocaleDateString() : 'N/A'}</span>,
+    cell: (info) => (
+      <span>
+        {info.getValue()
+          ? new Date(info.getValue()!).toLocaleDateString()
+          : 'N/A'}
+      </span>
+    ),
   }),
 ]
 
-export default function ApplicationTable({ applicationList }: { applicationList: Application[] }) {
-  const navigate = useNavigate();
+export default function ApplicationTable({
+  applicationList,
+}: {
+  applicationList: Application[]
+}) {
+  const navigate = useNavigate()
   const table = useReactTable<Application>({
     data: applicationList,
     columns,
@@ -59,8 +129,8 @@ export default function ApplicationTable({ applicationList }: { applicationList:
 
   const redirectToAddApplication = () => {
     navigate({
-      to: '/add-job'
-    });
+      to: '/add-job',
+    })
   }
 
   return (
@@ -80,9 +150,9 @@ export default function ApplicationTable({ applicationList }: { applicationList:
                   {header.isPlaceholder
                     ? null
                     : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext()
-                    )}
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
                 </th>
               ))}
             </tr>
@@ -98,10 +168,7 @@ export default function ApplicationTable({ applicationList }: { applicationList:
               >
                 {row.getVisibleCells().map((cell) => (
                   <td key={cell.id} className="p-4 align-middle">
-                    {flexRender(
-                      cell.column.columnDef.cell,
-                      cell.getContext()
-                    )}
+                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </td>
                 ))}
               </tr>
@@ -110,9 +177,17 @@ export default function ApplicationTable({ applicationList }: { applicationList:
             <tr>
               <td colSpan={columns.length} className="h-full p-10 text-center">
                 <FileX className="mx-auto p-4 size-20 text-muted-foreground" />
-                <div className='flex flex-col justify-center items-center'>
-                  <span className='text-2xl font-bold text-muted-foreground'>No records yet.</span>
-                  <Button onClick={redirectToAddApplication} className="mt-4 max-w-xs hover:cursor-pointer" variant="secondary">Add your first application</Button>
+                <div className="flex flex-col justify-center items-center">
+                  <span className="text-2xl font-bold text-muted-foreground">
+                    No records yet.
+                  </span>
+                  <Button
+                    onClick={redirectToAddApplication}
+                    className="mt-4 max-w-xs hover:cursor-pointer"
+                    variant="secondary"
+                  >
+                    Add your first application
+                  </Button>
                 </div>
               </td>
             </tr>
@@ -121,4 +196,4 @@ export default function ApplicationTable({ applicationList }: { applicationList:
       </table>
     </div>
   )
-} 
+}

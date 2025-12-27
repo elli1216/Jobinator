@@ -21,4 +21,41 @@ export const getApplicationList = createServerFn({
     return jobs
   })
 
+export const updateApplicationStatus = createServerFn({
+  method: 'POST',
+})
+  .inputValidator(
+    (data: {
+      applicationId: string
+      status:
+        | 'To_Apply'
+        | 'Applied'
+        | 'Interviewing'
+        | 'Offered'
+        | 'Rejected'
+        | 'Accepted'
+        | 'No_Response'
+    }) =>
+      z
+        .object({
+          applicationId: z.string(),
+          status: z.enum([
+            'To_Apply',
+            'Applied',
+            'Interviewing',
+            'Offered',
+            'Rejected',
+            'Accepted',
+            'No_Response',
+          ]),
+        })
+        .parse(data),
+  )
+  .handler(async ({ data }) => {
+    await prisma.applications.update({
+      where: { uuid: data.applicationId },
+      data: { status: data.status },
+    })
+  })
+
 export type Application = Awaited<ReturnType<typeof getApplicationList>>[number]

@@ -7,7 +7,10 @@ export const applicationSchema = z.object({
   date_applied: z.string().refine((val) => !isNaN(Date.parse(val)), {
     message: 'Invalid date format',
   }),
-  status: z.enum(ApplicationStatus).default(ApplicationStatus.To_Apply).optional(),
+  status: z
+    .enum(ApplicationStatus)
+    .default(ApplicationStatus.To_Apply)
+    .optional(),
   job_link: z.url().optional().or(z.literal('')),
   notes: z.string().optional(),
   jobTypeId: z.string().min(1, 'Job type is required'),

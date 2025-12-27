@@ -14,7 +14,6 @@ import ClerkProvider from '../integrations/clerk/provider'
 
 import appCss from '../styles.css?url'
 
-
 import { ThemeProvider } from '../features/common/components/theme-provider'
 import { UserSync } from '../features/auth/components/UserSync'
 import type { QueryClient } from '@tanstack/react-query'
@@ -51,15 +50,11 @@ export const Route = createRootRouteWithContext<MyRouterContext>()({
 
   shellComponent: RootDocument,
   notFoundComponent: () => {
-    return (
-      <NotFound />
-    )
+    return <NotFound />
   },
   errorComponent: ({ error }) => {
-    return (
-      <ErrorComponent error={error} />
-    )
-  }
+    return <ErrorComponent error={error} />
+  },
 })
 
 function RootDocument() {
@@ -96,7 +91,9 @@ function RootDocument() {
               </HomeLayout>
             </ClerkProvider>
           </ThemeProvider>
-        ) : <Loading />}
+        ) : (
+          <Loading />
+        )}
         <Scripts />
       </body>
     </html>
