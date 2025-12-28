@@ -9,9 +9,9 @@ function App() {
   return (
     <div className="flex flex-col h-full justify-center items-center p-4">
       <img
-        src="/jobinator.png"
+        src={user?.imageUrl || '/jobinator.png'}
         alt="Jobinator Logo"
-        className="inline-block h-30 w-40 mb-4"
+        className="inline-block size-50 mb-4 border rounded-full"
       />
       <h1 className="text-4xl font-bold mb-4">Welcome {user?.firstName}</h1>
       <p className="text-lg">

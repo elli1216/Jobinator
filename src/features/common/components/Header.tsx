@@ -3,11 +3,22 @@ import { Link } from '@tanstack/react-router'
 import { ModeToggle } from './mode-toggle'
 import { Button } from '@/components/ui/button'
 import { SignOutButton } from '@clerk/clerk-react'
-import { LogOut } from 'lucide-react'
+import { LogOut, User } from 'lucide-react'
 import { useAuth } from '@/hooks/use-auth'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
+import {
+  AlertDialog,
+  AlertDialogTrigger,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogFooter,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@/components/ui/alert-dialog"
 
 export default function Header() {
-  const { isSignedIn } = useAuth()
+  const { isSignedIn, user } = useAuth()
 
   return (
     <>
@@ -27,11 +38,40 @@ export default function Header() {
           <div className="flex items-center gap-2">
             <ModeToggle />
             {isSignedIn && (
-              <SignOutButton>
-                <Button variant="outline">
-                  <LogOut className="h-4 w-4" />
-                </Button>
-              </SignOutButton>
+              <div className="flex items-center gap-2 mr-5">
+                <Tooltip>
+                  <TooltipTrigger>
+                    <Button><User /></Button>
+                  </TooltipTrigger>
+                  <TooltipContent side="bottom">
+                    <div className='flex flex-col gap-1'>
+                      <p>{user?.fullName}</p>
+                      <p>{user?.emailAddresses[0]?.emailAddress}</p>
+                    </div>
+                  </TooltipContent>
+                </Tooltip>
+                <AlertDialog>
+                  <AlertDialogTrigger asChild>
+                    <Button variant="outline">
+                      <LogOut className="h-4 w-4" />
+                    </Button>
+                  </AlertDialogTrigger>
+                  <AlertDialogContent>
+                    <AlertDialogHeader>
+                      <AlertDialogTitle>Are you sure you want to sign out?</AlertDialogTitle>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                      <SignOutButton>
+                        <AlertDialogAction>
+                          <span>Logout</span>
+                          <LogOut className="h-4 w-4" />
+                        </AlertDialogAction>
+                      </SignOutButton>
+                    </AlertDialogFooter>
+                  </AlertDialogContent>
+                </AlertDialog>
+              </div>
             )}
           </div>
         </div>
