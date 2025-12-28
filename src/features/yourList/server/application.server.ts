@@ -1,6 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
 import { prisma } from '@/db'
 import { z } from 'zod'
+import { ApplicationStatus } from '@/generated/prisma/enums'
 
 export const getApplicationList = createServerFn({
   method: 'GET',
@@ -27,34 +28,19 @@ export const updateApplicationStatus = createServerFn({
   .inputValidator(
     (data: {
       applicationId: string
-      status:
-        | 'To_Apply'
-        | 'Applied'
-        | 'Interviewing'
-        | 'Offered'
-        | 'Rejected'
-        | 'Accepted'
-        | 'No_Response'
+      status: z.infer<typeof ApplicationStatus>
     }) =>
       z
         .object({
           applicationId: z.string(),
-          status: z.enum([
-            'To_Apply',
-            'Applied',
-            'Interviewing',
-            'Offered',
-            'Rejected',
-            'Accepted',
-            'No_Response',
-          ]),
+          status: z.enum(ApplicationStatus),
         })
         .parse(data),
   )
   .handler(async ({ data }) => {
     await prisma.applications.update({
       where: { uuid: data.applicationId },
-      data: { status: data.status },
+      data: { status: data.status, updatedAt: new Date() },
     })
   })
 
