@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
+import type { ApplicationSchema } from '@/features/addJob/schema/addJob.schema'
 import { prisma } from '@/db'
-import { ApplicationSchema } from '@/features/addJob/schema/addJob.schema'
 
 export const getJobById = createServerFn({ method: 'GET' })
   .inputValidator((data: { applicationId: string; clerkId: string }) => data)

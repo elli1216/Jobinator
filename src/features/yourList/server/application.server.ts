@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
-import { prisma } from '@/db'
 import { z } from 'zod'
+import { prisma } from '@/db'
 import { ApplicationStatus } from '@/generated/prisma/enums'
 
 export const getApplicationList = createServerFn({

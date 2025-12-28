@@ -1,6 +1,6 @@
 import { createServerFn } from '@tanstack/react-start'
-import { prisma } from '@/db'
 import { userSchema } from '../schema/user.schema'
+import { prisma } from '@/db'
 
 export const syncUser = createServerFn({
   method: 'POST',

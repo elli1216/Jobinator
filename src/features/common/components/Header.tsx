@@ -1,20 +1,20 @@
-import { SidebarTrigger } from '@/components/ui/sidebar'
 import { Link } from '@tanstack/react-router'
-import { ModeToggle } from './mode-toggle'
-import { Button } from '@/components/ui/button'
 import { SignOutButton } from '@clerk/clerk-react'
 import { LogOut, User } from 'lucide-react'
+import { ModeToggle } from './mode-toggle'
+import { Button } from '@/components/ui/button'
+import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useAuth } from '@/hooks/use-auth'
-import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
+import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import {
   AlertDialog,
-  AlertDialogTrigger,
+  AlertDialogAction,
+  AlertDialogCancel,
   AlertDialogContent,
+  AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogFooter,
-  AlertDialogCancel,
-  AlertDialogAction,
+  AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
 
 export default function Header() {

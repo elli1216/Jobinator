@@ -1,6 +1,14 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'sonner'
+import {
+  applicationSchema
+} from '../features/addJob/schema/addJob.schema'
+import { useAuth } from '../hooks/use-auth'
+import { addJob, getJobTypes } from '../features/addJob/server/addJob.server'
+import type {
+  ApplicationSchema} from '../features/addJob/schema/addJob.schema';
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -10,15 +18,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import {
-  applicationSchema,
-  ApplicationSchema,
-} from '../features/addJob/schema/addJob.schema'
 import { ApplicationStatus } from '@/generated/prisma/enums'
 import { Loading } from '@/features/common/components/Loading'
-import { useAuth } from '../hooks/use-auth'
-import { addJob, getJobTypes } from '../features/addJob/server/addJob.server'
-import { toast } from 'sonner'
 
 export const Route = createFileRoute('/add-job')({
   component: RouteComponent,

@@ -4,31 +4,32 @@ import {
   getCoreRowModel,
   useReactTable,
 } from '@tanstack/react-table'
+import { FilePen, FileX, Trash2 } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import AlertDialogDelete from './alertDialog'
+import type {
+  Application} from '@/features/yourList/server/application.server';
 import { fuzzyFilter } from '@/features/common/utils/table.utils'
 import {
-  Application,
   updateApplicationStatus,
 } from '@/features/yourList/server/application.server'
-import { FilePen, FileX, Trash2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { useNavigate } from '@tanstack/react-router'
 import {
   Select,
   SelectContent,
   SelectGroup,
   SelectItem,
+  SelectLabel,
   SelectTrigger,
-  SelectValue,
-  SelectLabel
+  SelectValue
 } from '@/components/ui/select'
 import { ApplicationStatus } from '@/generated/prisma/enums'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { toast } from 'sonner'
 import {
   AlertDialog,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import AlertDialogDelete from './alertDialog'
 
 const columnHelper = createColumnHelper<Application>()
 
@@ -84,7 +85,7 @@ const onDelete = (applicationId: string) => {
 export default function ApplicationTable({
   applicationList,
 }: {
-  applicationList: Application[]
+  applicationList: Array<Application>
 }) {
   const navigate = useNavigate()
 

@@ -1,22 +1,23 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate  } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
+import { Controller, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { toast } from 'sonner'
+import {
+  applicationSchema
+} from '../features/addJob/schema/addJob.schema'
+import type {
+  ApplicationSchema
+} from '../features/addJob/schema/addJob.schema';
 import { getJobById } from '@/features/editJob/server/editJob.server'
 import { useAuth } from '@/hooks/use-auth'
 import { Loading } from '@/features/common/components/Loading'
 import Error from '@/features/common/components/Error'
-import { Controller, useForm } from 'react-hook-form'
 import { ApplicationStatus } from '@/generated/prisma/enums'
-import { zodResolver } from '@hookform/resolvers/zod'
 import { getJobTypes } from '@/features/addJob/server/addJob.server'
-import {
-  applicationSchema,
-  ApplicationSchema
-} from '../features/addJob/schema/addJob.schema'
-import { useNavigate } from '@tanstack/react-router'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { toast } from 'sonner'
 
 export const Route = createFileRoute('/edit-job/$uuid')({
   component: RouteComponent,

@@ -1,3 +1,5 @@
+import { Home, List, PlusCircleIcon } from 'lucide-react'
+import { useNavigate } from '@tanstack/react-router'
 import {
   Sidebar,
   SidebarContent,
@@ -5,8 +7,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from '@/components/ui/sidebar'
-import { Home, PlusCircleIcon, List } from 'lucide-react'
-import { useNavigate } from '@tanstack/react-router'
 
 const items = [
   {

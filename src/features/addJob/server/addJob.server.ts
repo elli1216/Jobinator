@@ -1,7 +1,7 @@
 import { createServerFn } from '@tanstack/react-start'
-import { prisma } from '@/db'
-import { applicationSchema } from '../schema/addJob.schema'
 import { z } from 'zod'
+import { applicationSchema } from '../schema/addJob.schema'
+import { prisma } from '@/db'
 import { ApplicationStatus } from '@/generated/prisma/enums'
 
 export const getJobTypes = createServerFn({
