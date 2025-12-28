@@ -1,14 +1,9 @@
-import { createFileRoute, useNavigate  } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
-import {
-  applicationSchema
-} from '../features/addJob/schema/addJob.schema'
-import type {
-  ApplicationSchema
-} from '../features/addJob/schema/addJob.schema';
+import { applicationSchema, type ApplicationSchema } from '../features/addJob/schema/addJob.schema'
 import { getJobById } from '@/features/editJob/server/editJob.server'
 import { useAuth } from '@/hooks/use-auth'
 import { Loading } from '@/features/common/components/Loading'
@@ -31,7 +26,6 @@ export const Route = createFileRoute('/edit-job/$uuid')({
 function RouteComponent() {
   const { uuid } = Route.useParams()
   const { user } = useAuth()
-  const navigate = useNavigate()
   const { jobTypes } = Route.useLoaderData()
 
   const { data, isLoading, error } = useQuery({
@@ -41,24 +35,31 @@ function RouteComponent() {
 
   if (isLoading) return <Loading />
   if (error) return <Error error={error} />
+  if (!data) return <Error error="Job not found" />
+
+  return <JobForm data={data} jobTypes={jobTypes} />
+}
+
+function JobForm({ data, jobTypes }: { data: any, jobTypes: any[] }) {
+  const navigate = useNavigate()
 
   const { formState: { errors }, register, handleSubmit, control } = useForm<ApplicationSchema>({
     resolver: zodResolver(applicationSchema),
     defaultValues: {
-      company_name: data?.company_name,
-      job_title: data?.job_title,
-      date_applied: data?.date_applied.toISOString().split('T')[0],
-      status: data?.status,
-      job_link: data?.job_link || '',
-      notes: data?.notes,
-      jobTypeId: data?.jobTypeId,
+      company_name: data.company_name,
+      job_title: data.job_title,
+      date_applied: data.date_applied ? new Date(data.date_applied).toISOString().split('T')[0] : '', // Safe date parsing
+      status: data.status,
+      job_link: data.job_link || '',
+      notes: data.notes || '',
+      jobTypeId: data.jobTypeId,
     },
   })
 
-  const onSubmit = (data: ApplicationSchema) => {
-    console.log('Form submitted with data:', data)
+  const onSubmit = (formData: ApplicationSchema) => {
+    console.log('Form submitted with data:', formData)
     toast.success('Job application updated successfully')
-    navigate({ to: '/your-list' })
+    navigate({ to: '/your-list' }) // Adjust route as needed
   }
 
   return (

@@ -8,7 +8,6 @@ import { useAuth } from '@/hooks/use-auth'
 import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogFooter,
@@ -41,7 +40,9 @@ export default function Header() {
               <div className="flex items-center gap-2 mr-5">
                 <Tooltip>
                   <TooltipTrigger>
-                    <Button><User /></Button>
+                    <div className='p-2 bg-background rounded-sm text-content'>
+                      <User size={18} />
+                    </div>
                   </TooltipTrigger>
                   <TooltipContent side="bottom">
                     <div className='flex flex-col gap-1'>
@@ -63,10 +64,10 @@ export default function Header() {
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>
                       <SignOutButton>
-                        <AlertDialogAction>
+                        <Button variant="destructive">
                           <span>Logout</span>
                           <LogOut className="h-4 w-4" />
-                        </AlertDialogAction>
+                        </Button>
                       </SignOutButton>
                     </AlertDialogFooter>
                   </AlertDialogContent>
