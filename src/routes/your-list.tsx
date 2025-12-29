@@ -21,6 +21,7 @@ function RouteComponent() {
     queryFn: () => getApplicationList({ data: user!.id }),
     enabled: !!user?.id,
   })
+  console.log(applicationList);
 
   if (!isLoaded || isLoading) return <Loading />
 

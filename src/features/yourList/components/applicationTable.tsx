@@ -121,6 +121,10 @@ export default function ApplicationTable({
       header: 'Company Name',
       cell: (info) => info.getValue(),
     }),
+    columnHelper.accessor('company_location', {
+      header: 'Location',
+      cell: (info) => info.getValue(),
+    }),
     columnHelper.accessor('job_title', {
       header: 'Job Title',
       cell: (info) => info.getValue(),
@@ -132,6 +136,10 @@ export default function ApplicationTable({
     columnHelper.accessor('date_applied', {
       header: 'Date Applied',
       cell: (info) => new Date(info.getValue()).toLocaleDateString(),
+    }),
+    columnHelper.accessor('application_method', {
+      header: 'Application Method',
+      cell: (info) => info.getValue(),
     }),
     columnHelper.accessor('status', {
       header: 'Status',
