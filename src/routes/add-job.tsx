@@ -19,7 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ApplicationStatus } from '@/generated/prisma/enums'
+import { ApplicationStatus, ApplicationMethod } from '@/generated/prisma/enums'
 import { Loading } from '@/features/common/components/Loading'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { Textarea } from '@/components/ui/textarea'
@@ -51,7 +51,9 @@ function RouteComponent() {
       status: ApplicationStatus.To_Apply,
       job_link: '',
       notes: '',
+      application_method: ApplicationMethod.Walk_in,
       company_name: '',
+      company_location: '',
       job_title: '',
       date_applied: '',
       jobTypeId: '',
@@ -89,32 +91,76 @@ function RouteComponent() {
     <div className="flex justify-center w-full pt-4">
       <div className="p-4 w-full md:w-2/3">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div>
-            <label htmlFor="company_name" className="block text-sm font-medium">
-              Company Name
-            </label>
-            <Input
-              id="company_name"
-              {...register('company_name')}
-              className="mt-1"
-            />
-            {errors.company_name && (
-              <p className="text-sm text-red-600 mt-1">
-                {errors.company_name.message}
-              </p>
-            )}
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+            <div>
+              <label htmlFor="company_name" className="block text-sm font-medium">
+                Company Name
+              </label>
+              <Input
+                id="company_name"
+                {...register('company_name')}
+                className="mt-1"
+              />
+              {errors.company_name && (
+                <p className="text-sm text-red-600 mt-1">
+                  {errors.company_name.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="company_name" className="block text-sm font-medium">
+                Location
+              </label>
+              <Input
+                id="company_location"
+                {...register('company_location')}
+                className="mt-1"
+              />
+              {errors.company_name && (
+                <p className="text-sm text-red-600 mt-1">
+                  {errors.company_location?.message}
+                </p>
+              )}
+            </div>
           </div>
 
-          <div>
-            <label htmlFor="job_title" className="block text-sm font-medium">
-              Job Title
-            </label>
-            <Input id="job_title" {...register('job_title')} className="mt-1" />
-            {errors.job_title && (
-              <p className="text-sm text-red-600 mt-1">
-                {errors.job_title.message}
-              </p>
-            )}
+          <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+            <div>
+              <label htmlFor="job_title" className="block text-sm font-medium">
+                Job Title
+              </label>
+              <Input id="job_title" {...register('job_title')} className="mt-1" />
+              {errors.job_title && (
+                <p className="text-sm text-red-600 mt-1">
+                  {errors.job_title.message}
+                </p>
+              )}
+            </div>
+
+            <div>
+              <label htmlFor="job_title" className="block text-sm font-medium">
+                Application Method
+              </label>
+              <Controller
+                control={control}
+                name="application_method"
+                render={({ field }) => (
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <SelectTrigger className="mt-1 w-full">
+                      <SelectValue placeholder="Select a method" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {Object.values(ApplicationMethod).map((method) => (
+                        <SelectItem key={method} value={method}>
+                          {method.replace(/_/g, ' ')}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                )}
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
