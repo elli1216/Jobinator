@@ -1,13 +1,11 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import {
-  Github,
-  Linkedin,
-  Twitter,
   LayoutDashboard,
   LayoutGrid,
   ClipboardList,
 } from 'lucide-react'
+import CardSwap, { Card } from '@/components/CardSwap'
 
 export const Route = createFileRoute('/home')({
   component: LandingPage,
@@ -15,29 +13,30 @@ export const Route = createFileRoute('/home')({
 
 function LandingPage() {
   return (
-    <div className="bg-background text-foreground">
+    <div className="bg-background text-foreground pb-20">
       {/* Hero Section */}
-      <section className="text-center py-20 px-4">
-        <h1 className="text-5xl font-bold mb-4">
-          Stop Drowning in Job Applications.
-        </h1>
-        <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
-          Jobinator helps you track every application, manage interviews, and
-          stay organized, so you can focus on landing your dream job.
-        </p>
-        <Link to="/login">
-          <Button size="lg">Get Started for Free</Button>
-        </Link>
-      </section>
-
-      {/* Features Section */}
-      <section className="py-20 bg-secondary">
-        <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12">
-            Everything You Need to Succeed
-          </h2>
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div className="p-8 border rounded-lg bg-background flex flex-col items-center">
+      <section className="flex relative h-130 text-center px-4">
+        <div className="flex flex-col items-center justify-center px-20 pt-12">
+          <h1 className="text-5xl w-md font-bold mb-4">
+            Stop Drowning in Job Applications.
+          </h1>
+          <p className="text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Jobinator helps you track every application, manage interviews, and
+            stay organized, so you can focus on landing your dream job.
+          </p>
+          <Link to="/login">
+            <Button size="lg">Get Started for Free</Button>
+          </Link>
+        </div>
+        <CardSwap
+          cardDistance={60}
+          verticalDistance={60}
+          delay={3000}
+          pauseOnHover={false}
+          width={600}
+        >
+          <Card>
+            <div className="p-8 h-full border rounded-lg bg-secondary flex flex-col items-center justify-center">
               <LayoutDashboard className="w-12 h-12 mb-4 text-primary" />
               <h3 className="text-2xl font-bold mb-2">Dashboard</h3>
               <p>
@@ -45,15 +44,21 @@ function LandingPage() {
                 glance.
               </p>
             </div>
-            <div className="p-8 border rounded-lg bg-background flex flex-col items-center">
-              <LayoutGrid className="w-12 h-12 mb-4 text-primary" />
-              <h3 className="text-2xl font-bold mb-2">Kanban Board</h3>
-              <p>
+          </Card>
+          <Card>
+            <div className="p-8 h-full border rounded-lg bg-primary flex flex-col items-center justify-center">
+              <LayoutGrid className="w-12 h-12 mb-4 text-secondary" />
+              <h3 className="text-2xl text-white font-bold mb-2">
+                Kanban Board
+              </h3>
+              <p className='text-white'>
                 Visualize your pipeline and drag-and-drop applications between
                 stages.
               </p>
             </div>
-            <div className="p-8 border rounded-lg bg-background flex flex-col items-center">
+          </Card>
+          <Card>
+            <div className="p-8 h-full border rounded-lg bg-background flex flex-col items-center justify-center">
               <ClipboardList className="w-12 h-12 mb-4 text-primary" />
               <h3 className="text-2xl font-bold mb-2">Smart Tracking</h3>
               <p>
@@ -61,13 +66,13 @@ function LandingPage() {
                 dates in one place.
               </p>
             </div>
-          </div>
-        </div>
+          </Card>
+        </CardSwap>
       </section>
 
       {/* Footer */}
-      <footer className="py-8">
-        <div className="container mx-auto px-4 flex justify-center items-center">
+      <footer className="py-4 fixed bottom-0 w-full bg-secondary border-t">
+        <div className="container mx-auto px-4 flex justify-center items-center ">
           <p>&copy; 2026 Jobinator. All rights reserved.</p>
         </div>
       </footer>
