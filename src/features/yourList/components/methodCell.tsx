@@ -1,8 +1,16 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query"
-import { updateApplicationMethod } from "../server/application.server"
-import { toast } from "sonner"
-import { ApplicationMethod } from "@/generated/prisma/enums"
-import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { updateApplicationMethod } from '../server/application.server'
+import { toast } from 'sonner'
+import { ApplicationMethod } from '@/generated/prisma/enums'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 export default function MethodCell({
   method,
@@ -15,14 +23,15 @@ export default function MethodCell({
 
   const { mutate, isPending } = useMutation({
     mutationFn: updateApplicationMethod,
-    onSuccess: async () => toast.promise(
-      queryClient.invalidateQueries({ queryKey: ['applications'] }),
-      {
-        loading: 'Updating method...',
-        success: 'method updated successfully',
-        error: 'Failed to update method',
-      },
-    ),
+    onSuccess: async () =>
+      toast.promise(
+        queryClient.invalidateQueries({ queryKey: ['applications'] }),
+        {
+          loading: 'Updating method...',
+          success: 'method updated successfully',
+          error: 'Failed to update method',
+        },
+      ),
     onError: () => {
       console.error('Failed to update method')
     },
@@ -33,7 +42,11 @@ export default function MethodCell({
   }
 
   return (
-    <Select value={method} onValueChange={handleValueChange} disabled={isPending}>
+    <Select
+      value={method}
+      onValueChange={handleValueChange}
+      disabled={isPending}
+    >
       <SelectTrigger className="w-fit">
         <SelectValue placeholder={method} />
       </SelectTrigger>

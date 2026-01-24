@@ -21,7 +21,7 @@ function RouteComponent() {
     queryFn: () => getApplicationList({ data: user!.id }),
     enabled: !!user?.id,
   })
-  console.log(applicationList);
+  console.log(applicationList)
 
   if (!isLoaded || isLoading) return <Loading />
 
@@ -31,7 +31,7 @@ function RouteComponent() {
 
   return (
     <div className="p-4">
-      <div className='flex justify-between'>
+      <div className="flex justify-between">
         <h1 className="text-2xl font-bold mb-4">Your Applications</h1>
         <Button onClick={handleAddNew} variant="default">
           <Plus className="h-4 w-4" />

@@ -3,7 +3,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
-import { applicationSchema, type ApplicationSchema } from '../features/addJob/schema/addJob.schema'
+import {
+  applicationSchema,
+  type ApplicationSchema,
+} from '../features/addJob/schema/addJob.schema'
 import { getJobById } from '@/features/editJob/server/editJob.server'
 import { useAuth } from '@/hooks/use-auth'
 import { Loading } from '@/features/common/components/Loading'
@@ -12,7 +15,13 @@ import { ApplicationStatus, ApplicationMethod } from '@/generated/prisma/enums'
 import { getJobTypes } from '@/features/addJob/server/addJob.server'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { Applications, JobTypes } from '@/generated/prisma/client'
 import { editJob } from '@/features/editJob/server/editJob.server'
 import { Textarea } from '@/components/ui/textarea'
@@ -34,7 +43,8 @@ function RouteComponent() {
 
   const { data, isLoading, error } = useQuery({
     queryKey: ['job', uuid],
-    queryFn: async () => getJobById({ data: { applicationId: uuid, clerkId: user?.id! } }),
+    queryFn: async () =>
+      getJobById({ data: { applicationId: uuid, clerkId: user?.id! } }),
   })
 
   if (isLoading) return <Loading />
@@ -44,13 +54,25 @@ function RouteComponent() {
   return <JobForm data={data} jobTypes={jobTypes} user={{ id: user?.id! }} />
 }
 
-function JobForm({ data, jobTypes, user }: { data: Applications, jobTypes: JobTypes[], user: { id: string } }) {
+function JobForm({
+  data,
+  jobTypes,
+  user,
+}: {
+  data: Applications
+  jobTypes: JobTypes[]
+  user: { id: string }
+}) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const router = useRouter()
 
-
-  const { formState: { errors, isDirty }, register, handleSubmit, control } = useForm<ApplicationSchema>({
+  const {
+    formState: { errors, isDirty },
+    register,
+    handleSubmit,
+    control,
+  } = useForm<ApplicationSchema>({
     resolver: zodResolver(applicationSchema),
     defaultValues: {
       company_name: data.company_name,
@@ -69,14 +91,15 @@ function JobForm({ data, jobTypes, user }: { data: Applications, jobTypes: JobTy
 
   const { mutate: editMutation, isPending } = useMutation({
     mutationFn: editJob,
-    onSuccess: async () => toast.promise(
-      queryClient.invalidateQueries({ queryKey: ['applications'] }),
-      {
-        loading: 'Updating job application...',
-        success: 'Job application updated successfully',
-        error: 'Failed to update job application',
-      },
-    ),
+    onSuccess: async () =>
+      toast.promise(
+        queryClient.invalidateQueries({ queryKey: ['applications'] }),
+        {
+          loading: 'Updating job application...',
+          success: 'Job application updated successfully',
+          error: 'Failed to update job application',
+        },
+      ),
     onError: (error) => {
       console.error('Failed to update job application', error)
     },
@@ -89,8 +112,9 @@ function JobForm({ data, jobTypes, user }: { data: Applications, jobTypes: JobTy
           ...data,
           ...formData,
           date_applied: new Date(formData.date_applied!),
-        }, clerkId: user.id
-      }
+        },
+        clerkId: user.id,
+      },
     })
     router.invalidate({ sync: true })
     navigate({ to: '/your-list' })
@@ -100,9 +124,12 @@ function JobForm({ data, jobTypes, user }: { data: Applications, jobTypes: JobTy
     <div className="flex justify-center w-full pt-4">
       <div className="p-4 w-full md:w-2/3">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div>
-              <label htmlFor="company_name" className="block text-sm font-medium">
+              <label
+                htmlFor="company_name"
+                className="block text-sm font-medium"
+              >
                 Company Name
               </label>
               <Input
@@ -118,7 +145,10 @@ function JobForm({ data, jobTypes, user }: { data: Applications, jobTypes: JobTy
             </div>
 
             <div>
-              <label htmlFor="company_name" className="block text-sm font-medium">
+              <label
+                htmlFor="company_name"
+                className="block text-sm font-medium"
+              >
                 Location
               </label>
               <Input
@@ -134,12 +164,16 @@ function JobForm({ data, jobTypes, user }: { data: Applications, jobTypes: JobTy
             </div>
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div>
               <label htmlFor="job_title" className="block text-sm font-medium">
                 Job Title
               </label>
-              <Input id="job_title" {...register('job_title')} className="mt-1" />
+              <Input
+                id="job_title"
+                {...register('job_title')}
+                className="mt-1"
+              />
               {errors.job_title && (
                 <p className="text-sm text-red-600 mt-1">
                   {errors.job_title.message}
@@ -280,9 +314,17 @@ function JobForm({ data, jobTypes, user }: { data: Applications, jobTypes: JobTy
               </p>
             )}
           </div>
-          <div className='flex gap-2'>
-            <Button onClick={() => window.history.back()} disabled={isPending} type="button">Back</Button>
-            <Button type="submit" disabled={isPending || !isDirty}>Save Changes</Button>
+          <div className="flex gap-2">
+            <Button
+              onClick={() => window.history.back()}
+              disabled={isPending}
+              type="button"
+            >
+              Back
+            </Button>
+            <Button type="submit" disabled={isPending || !isDirty}>
+              Save Changes
+            </Button>
           </div>
         </form>
       </div>

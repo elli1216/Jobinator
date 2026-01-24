@@ -9,15 +9,10 @@ import { useNavigate } from '@tanstack/react-router'
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
 import AlertDialogDelete from './alertDialog'
-import type {
-  Application
-} from '@/features/yourList/server/application.server';
+import type { Application } from '@/features/yourList/server/application.server'
 import { fuzzyFilter } from '@/features/common/utils/table.utils'
 import { Button } from '@/components/ui/button'
-import {
-  AlertDialog,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+import { AlertDialog, AlertDialogTrigger } from '@/components/ui/alert-dialog'
 import { deleteJob } from '@/features/editJob/server/editJob.server'
 import { useAuth } from '@/hooks/use-auth'
 import StatusCell from './statusCell'
@@ -36,20 +31,24 @@ export default function ApplicationTable({
 
   const { mutate: deleteMutation, isPending } = useMutation({
     mutationFn: deleteJob,
-    onSuccess: async () => toast.promise(
-      queryClient.invalidateQueries({ queryKey: ['applications'] }),
-      {
-        loading: 'Deleting application...',
-        success: 'Application deleted successfully',
-        error: 'Failed to delete application',
-      },
-    ),
+    onSuccess: async () =>
+      toast.promise(
+        queryClient.invalidateQueries({ queryKey: ['applications'] }),
+        {
+          loading: 'Deleting application...',
+          success: 'Application deleted successfully',
+          error: 'Failed to delete application',
+        },
+      ),
     onError: (error) => {
       console.error('Failed to delete application', error)
     },
   })
 
-  const onDelete = async (applicationId: string, clerkId: string | undefined) => {
+  const onDelete = async (
+    applicationId: string,
+    clerkId: string | undefined,
+  ) => {
     if (!clerkId) {
       toast.error('User not authenticated')
       return
@@ -129,18 +128,27 @@ export default function ApplicationTable({
       header: '',
       cell: (info) => (
         <div className="flex gap-1">
-          <Button variant={'default'} disabled={isPending} onClick={() => navigate({ to: `/edit-job/${info.getValue()}` })}><FilePen /></Button>
+          <Button
+            variant={'default'}
+            disabled={isPending}
+            onClick={() => navigate({ to: `/edit-job/${info.getValue()}` })}
+          >
+            <FilePen />
+          </Button>
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant={'destructive'} disabled={isPending}><Trash2 /></Button>
+              <Button variant={'destructive'} disabled={isPending}>
+                <Trash2 />
+              </Button>
             </AlertDialogTrigger>
-            <AlertDialogDelete onClick={() => onDelete(info.getValue(), user?.id)} />
+            <AlertDialogDelete
+              onClick={() => onDelete(info.getValue(), user?.id)}
+            />
           </AlertDialog>
         </div>
       ),
     }),
   ]
-
 
   const table = useReactTable<Application>({
     data: applicationList,
@@ -172,9 +180,9 @@ export default function ApplicationTable({
                   {header.isPlaceholder
                     ? null
                     : flexRender(
-                      header.column.columnDef.header,
-                      header.getContext(),
-                    )}
+                        header.column.columnDef.header,
+                        header.getContext(),
+                      )}
                 </th>
               ))}
             </tr>

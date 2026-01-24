@@ -6,9 +6,13 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog'
 
-export default function AlertDialogDelete({ onClick }: { onClick: () => void }) {
+export default function AlertDialogDelete({
+  onClick,
+}: {
+  onClick: () => void
+}) {
   return (
     <AlertDialogContent>
       <AlertDialogHeader>

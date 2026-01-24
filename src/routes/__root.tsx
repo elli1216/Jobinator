@@ -25,6 +25,9 @@ import { Toaster } from '@/components/ui/sonner'
 
 interface MyRouterContext {
   queryClient: QueryClient
+  auth: {
+    userId: string | null
+  }
 }
 
 export const Route = createRootRouteWithContext<MyRouterContext>()({
@@ -94,7 +97,9 @@ function RootDocument() {
             </ClerkProvider>
           </ThemeProvider>
         ) : (
-          <div className='h-screen'><Loading /></div>
+          <div className="h-screen">
+            <Loading />
+          </div>
         )}
         <Scripts />
       </body>

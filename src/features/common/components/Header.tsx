@@ -5,7 +5,11 @@ import { ModeToggle } from './mode-toggle'
 import { Button } from '@/components/ui/button'
 import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useAuth } from '@/hooks/use-auth'
-import { Tooltip, TooltipContent, TooltipTrigger } from '@/components/ui/tooltip'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from '@/components/ui/tooltip'
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -14,7 +18,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@/components/ui/alert-dialog"
+} from '@/components/ui/alert-dialog'
 
 export default function Header() {
   const { isSignedIn, user } = useAuth()
@@ -40,12 +44,12 @@ export default function Header() {
               <div className="flex items-center gap-2 mr-5">
                 <Tooltip>
                   <TooltipTrigger>
-                    <div className='p-2 bg-background rounded-sm text-content'>
+                    <div className="p-2 bg-background rounded-sm text-content">
                       <User size={18} />
                     </div>
                   </TooltipTrigger>
                   <TooltipContent side="bottom">
-                    <div className='flex flex-col gap-1'>
+                    <div className="flex flex-col gap-1">
                       <p>{user?.fullName}</p>
                       <p>{user?.emailAddresses[0]?.emailAddress}</p>
                     </div>
@@ -59,7 +63,9 @@ export default function Header() {
                   </AlertDialogTrigger>
                   <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Are you sure you want to sign out?</AlertDialogTitle>
+                      <AlertDialogTitle>
+                        Are you sure you want to sign out?
+                      </AlertDialogTitle>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel>Cancel</AlertDialogCancel>

@@ -2,14 +2,10 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
-import {
-  applicationSchema
-} from '../features/addJob/schema/addJob.schema'
+import { applicationSchema } from '../features/addJob/schema/addJob.schema'
 import { useAuth } from '../hooks/use-auth'
 import { addJob, getJobTypes } from '../features/addJob/server/addJob.server'
-import type {
-  ApplicationSchema
-} from '../features/addJob/schema/addJob.schema';
+import type { ApplicationSchema } from '../features/addJob/schema/addJob.schema'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -65,14 +61,15 @@ function RouteComponent() {
 
   const { mutate: addMutation, isPending } = useMutation({
     mutationFn: addJob,
-    onSuccess: async () => toast.promise(
-      queryClient.invalidateQueries({ queryKey: ['applications'] }),
-      {
-        loading: 'Adding job application...',
-        success: 'Job application added successfully',
-        error: 'Failed to add job application',
-      },
-    ),
+    onSuccess: async () =>
+      toast.promise(
+        queryClient.invalidateQueries({ queryKey: ['applications'] }),
+        {
+          loading: 'Adding job application...',
+          success: 'Job application added successfully',
+          error: 'Failed to add job application',
+        },
+      ),
     onError: (error) => {
       console.error('Failed to add job:', error)
     },
@@ -94,9 +91,12 @@ function RouteComponent() {
     <div className="flex justify-center w-full pt-4">
       <div className="p-4 w-full md:w-2/3">
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div>
-              <label htmlFor="company_name" className="block text-sm font-medium">
+              <label
+                htmlFor="company_name"
+                className="block text-sm font-medium"
+              >
                 Company Name
               </label>
               <Input
@@ -112,7 +112,10 @@ function RouteComponent() {
             </div>
 
             <div>
-              <label htmlFor="company_location" className="block text-sm font-medium">
+              <label
+                htmlFor="company_location"
+                className="block text-sm font-medium"
+              >
                 Location
               </label>
               <Input
@@ -128,12 +131,16 @@ function RouteComponent() {
             </div>
           </div>
 
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-2'>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
             <div>
               <label htmlFor="job_title" className="block text-sm font-medium">
                 Job Title
               </label>
-              <Input id="job_title" {...register('job_title')} className="mt-1" />
+              <Input
+                id="job_title"
+                {...register('job_title')}
+                className="mt-1"
+              />
               {errors.job_title && (
                 <p className="text-sm text-red-600 mt-1">
                   {errors.job_title.message}
@@ -276,7 +283,9 @@ function RouteComponent() {
           </div>
 
           <div>
-            <Button disabled={isPending} type="submit">Add Application</Button>
+            <Button disabled={isPending} type="submit">
+              Add Application
+            </Button>
           </div>
         </form>
       </div>
