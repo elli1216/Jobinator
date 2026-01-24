@@ -73,14 +73,16 @@ function RootDocument() {
       <head>
         <HeadContent />
       </head>
-      <body suppressHydrationWarning>
+      <body className='max-w-screen' suppressHydrationWarning>
         {mounted ? (
           <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <ClerkProvider>
               <HomeLayout>
                 <Toaster position="top-center" />
                 <UserSync />
-                <Outlet />
+                <div className="flex-1 overflow-hidden">
+                  <Outlet />
+                </div>
                 <TanStackDevtools
                   config={{
                     position: 'bottom-right',

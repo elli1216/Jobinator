@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as YourListRouteImport } from './routes/your-list'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as BoardRouteImport } from './routes/board'
 import { Route as AddJobRouteImport } from './routes/add-job'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as EditJobUuidRouteImport } from './routes/edit-job.$uuid'
@@ -23,6 +24,11 @@ const YourListRoute = YourListRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BoardRoute = BoardRouteImport.update({
+  id: '/board',
+  path: '/board',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AddJobRoute = AddJobRouteImport.update({
@@ -44,6 +50,7 @@ const EditJobUuidRoute = EditJobUuidRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/add-job': typeof AddJobRoute
+  '/board': typeof BoardRoute
   '/login': typeof LoginRoute
   '/your-list': typeof YourListRoute
   '/edit-job/$uuid': typeof EditJobUuidRoute
@@ -51,6 +58,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/add-job': typeof AddJobRoute
+  '/board': typeof BoardRoute
   '/login': typeof LoginRoute
   '/your-list': typeof YourListRoute
   '/edit-job/$uuid': typeof EditJobUuidRoute
@@ -59,19 +67,27 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/add-job': typeof AddJobRoute
+  '/board': typeof BoardRoute
   '/login': typeof LoginRoute
   '/your-list': typeof YourListRoute
   '/edit-job/$uuid': typeof EditJobUuidRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/add-job' | '/login' | '/your-list' | '/edit-job/$uuid'
+  fullPaths:
+    | '/'
+    | '/add-job'
+    | '/board'
+    | '/login'
+    | '/your-list'
+    | '/edit-job/$uuid'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/add-job' | '/login' | '/your-list' | '/edit-job/$uuid'
+  to: '/' | '/add-job' | '/board' | '/login' | '/your-list' | '/edit-job/$uuid'
   id:
     | '__root__'
     | '/'
     | '/add-job'
+    | '/board'
     | '/login'
     | '/your-list'
     | '/edit-job/$uuid'
@@ -80,6 +96,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AddJobRoute: typeof AddJobRoute
+  BoardRoute: typeof BoardRoute
   LoginRoute: typeof LoginRoute
   YourListRoute: typeof YourListRoute
   EditJobUuidRoute: typeof EditJobUuidRoute
@@ -99,6 +116,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/board': {
+      id: '/board'
+      path: '/board'
+      fullPath: '/board'
+      preLoaderRoute: typeof BoardRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/add-job': {
@@ -128,6 +152,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddJobRoute: AddJobRoute,
+  BoardRoute: BoardRoute,
   LoginRoute: LoginRoute,
   YourListRoute: YourListRoute,
   EditJobUuidRoute: EditJobUuidRoute,

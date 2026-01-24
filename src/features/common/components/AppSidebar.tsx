@@ -1,4 +1,4 @@
-import { Home, List, PlusCircleIcon } from 'lucide-react'
+import { Home, List, PlusCircleIcon, LayoutGrid } from 'lucide-react'
 import { useNavigate } from '@tanstack/react-router'
 import {
   Sidebar,
@@ -23,6 +23,11 @@ const items = [
     title: 'Your List',
     to: '/your-list',
     icon: List,
+  },
+  {
+    title: 'Board',
+    to: '/board',
+    icon: LayoutGrid,
   },
 ]
 
