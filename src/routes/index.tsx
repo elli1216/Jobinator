@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useAuth } from '../hooks/use-auth'
 import { getDashboardStats } from '@/features/yourList/server/application.server'
 import { Briefcase, CheckCircle, Clock, FileText } from 'lucide-react'
@@ -6,33 +6,25 @@ import { useSuspenseQuery } from '@tanstack/react-query'
 import { Loading } from '@/features/common/components/Loading'
 import { StatCard } from '@/features/dashboard/components/StatCard'
 import { RecentActivityList } from '@/features/dashboard/components/RecentActivityList'
+import { useEffect } from 'react'
+import { useUser } from '@clerk/clerk-react'
 
 export const Route = createFileRoute('/')({
   component: App,
 })
 
 function App() {
-  const { isLoaded, isSignedIn } = useAuth()
+  const { isLoaded, isSignedIn } = useUser()
+  const navigate = useNavigate()
 
-  if (!isLoaded) {
+  useEffect(() => {
+    if (isLoaded && !isSignedIn) {
+      navigate({ to: '/home', replace: true })
+    }
+  }, [isLoaded, isSignedIn, navigate])
+
+  if (!isLoaded || !isSignedIn) {
     return <Loading />
-  }
-
-  if (!isSignedIn) {
-    return (
-      <div className="flex flex-col h-full justify-center items-center p-4">
-        <img
-          src={'/jobinator.png'}
-          alt="Jobinator Logo"
-          className="inline-block size-50 mb-4 border rounded-full"
-        />
-        <h1 className="text-4xl font-bold mb-4">Welcome</h1>
-        <p className="text-lg">
-          Track and manage your job applications efficiently and stay organized
-          throughout your job search journey.
-        </p>
-      </div>
-    )
   }
 
   return <Dashboard />
@@ -51,7 +43,9 @@ function Dashboard() {
 
   return (
     <div className="p-4 md:p-8">
-      <h1 className="text-3xl font-bold mb-6">Welcome {user.fullName || user.firstName || 'User'}</h1>
+      <h1 className="text-3xl font-bold mb-6">
+        Welcome {user.fullName || user.firstName || 'User'}
+      </h1>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4 mb-6">
         <StatCard
           title="Total Applied"

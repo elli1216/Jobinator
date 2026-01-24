@@ -40,7 +40,7 @@ export default function Header() {
           </div>
           <div className="flex items-center gap-2">
             <ModeToggle />
-            {isSignedIn && (
+            {isSignedIn ? (
               <div className="flex items-center gap-2 mr-5">
                 <Tooltip>
                   <TooltipTrigger>
@@ -79,6 +79,10 @@ export default function Header() {
                   </AlertDialogContent>
                 </AlertDialog>
               </div>
+            ) : (
+              <Link to="/login">
+                <Button variant="outline">Login</Button>
+              </Link>
             )}
           </div>
         </div>
