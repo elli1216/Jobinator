@@ -1,21 +1,31 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
-import {
-  LayoutDashboard,
-  LayoutGrid,
-  ClipboardList,
-} from 'lucide-react'
-import CardSwap, { Card } from '@/components/CardSwap'
+import { useEffect, useState } from 'react'
+import { Loading } from '@/features/common/components/Loading';
+// import {
+//   LayoutDashboard,
+//   LayoutGrid,
+//   ClipboardList,
+// } from 'lucide-react'
+// import CardSwap, { Card } from '@/components/CardSwap'
 
 export const Route = createFileRoute('/home')({
   component: LandingPage,
 })
 
 function LandingPage() {
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, [])
+
+  if (!mounted) return <Loading />
+
   return (
-    <div className="bg-background text-foreground md:pb-20">
+    <div className="bg-background text-foreground md:pb-20" >
       {/* Hero Section */}
-      <section className="flex flex-col md:flex-row md:relative h-130 text-center px-4">
+      <section className="flex flex-col md:flex-row md:relative h-130 text-center px-4" >
         <div className="flex flex-col items-center justify-center px-20 pt-25 md:pt-12">
           <h1 className="text-5xl w-md font-bold mb-4">
             Stop Drowning in Job Applications.
@@ -28,7 +38,7 @@ function LandingPage() {
             <Button size="lg">Get Started for Free</Button>
           </Link>
         </div>
-        <div className='hidden md:block'>
+        {/* <div className='hidden md:block'>
           <CardSwap
             cardDistance={60}
             verticalDistance={60}
@@ -69,11 +79,11 @@ function LandingPage() {
               </div>
             </Card>
           </CardSwap>
-        </div>
+        </div> */}
       </section>
 
       {/* Footer */}
-      <footer className="py-4 fixed bottom-0 w-full bg-secondary border-t">
+      <footer className="py-4 fixed bottom-0 w-full bg-secondary border-t" >
         <div className="container mx-auto px-4 flex justify-center items-center ">
           <p>&copy; 2026 Jobinator. All rights reserved.</p>
         </div>
