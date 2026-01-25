@@ -6,11 +6,11 @@ import React, {
   ReactElement,
   ReactNode,
   RefObject,
-  useEffect,
   useMemo,
   useRef
 } from 'react';
 import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 export interface CardSwapProps {
   width?: number | string;
@@ -33,7 +33,7 @@ export const Card = forwardRef<HTMLDivElement, CardProps>(({ customClass, ...res
   <div
     ref={ref}
     {...rest}
-    className={`absolute top-1/2 left-1/2 rounded-xl border border-white bg-black [transform-style:preserve-3d] [will-change:transform] [backface-visibility:hidden] ${customClass ?? ''} ${rest.className ?? ''}`.trim()}
+    className={`absolute top-1/2 left-1/2 rounded-xl border border-white bg-black transform-3d will-change-transform backface-hidden ${customClass ?? ''} ${rest.className ?? ''}`.trim()}
   />
 ));
 Card.displayName = 'Card';
@@ -106,10 +106,16 @@ const CardSwap: React.FC<CardSwapProps> = ({
   const intervalRef = useRef<number>(0);
   const container = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  useGSAP(() => {
+    // 1. Initial Placement
     const total = refs.length;
-    refs.forEach((r, i) => placeNow(r.current!, makeSlot(i, cardDistance, verticalDistance, total), skewAmount));
+    refs.forEach((r, i) => {
+      if (r.current) {
+        placeNow(r.current, makeSlot(i, cardDistance, verticalDistance, total), skewAmount);
+      }
+    });
 
+    // 2. Define the Swap Animation Logic
     const swap = () => {
       if (order.current.length < 2) return;
 
@@ -118,6 +124,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
       const tl = gsap.timeline();
       tlRef.current = tl;
 
+      // Drop the front card
       tl.to(elFront, {
         y: '+=500',
         duration: config.durDrop,
@@ -125,6 +132,8 @@ const CardSwap: React.FC<CardSwapProps> = ({
       });
 
       tl.addLabel('promote', `-=${config.durDrop * config.promoteOverlap}`);
+
+      // Move all other cards forward
       rest.forEach((idx, i) => {
         const el = refs[idx].current!;
         const slot = makeSlot(i, cardDistance, verticalDistance, refs.length);
@@ -142,8 +151,10 @@ const CardSwap: React.FC<CardSwapProps> = ({
         );
       });
 
+      // Move the front card to the back
       const backSlot = makeSlot(refs.length - 1, cardDistance, verticalDistance, refs.length);
       tl.addLabel('return', `promote+=${config.durMove * config.returnDelay}`);
+
       tl.call(
         () => {
           gsap.set(elFront, { zIndex: backSlot.zIndex });
@@ -151,6 +162,7 @@ const CardSwap: React.FC<CardSwapProps> = ({
         undefined,
         'return'
       );
+
       tl.to(
         elFront,
         {
@@ -163,16 +175,19 @@ const CardSwap: React.FC<CardSwapProps> = ({
         'return'
       );
 
+      // Update order state at the end of the sequence
       tl.call(() => {
         order.current = [...rest, front];
       });
     };
 
+    // 3. Start the Loop
     swap();
     intervalRef.current = window.setInterval(swap, delay);
 
-    if (pauseOnHover) {
-      const node = container.current!;
+    // 4. Handle Hover Pause (Optional)
+    const node = container.current;
+    if (pauseOnHover && node) {
       const pause = () => {
         tlRef.current?.pause();
         clearInterval(intervalRef.current);
@@ -181,16 +196,27 @@ const CardSwap: React.FC<CardSwapProps> = ({
         tlRef.current?.play();
         intervalRef.current = window.setInterval(swap, delay);
       };
+
       node.addEventListener('mouseenter', pause);
       node.addEventListener('mouseleave', resume);
+
+      // Cleanup specific to hover listeners
       return () => {
         node.removeEventListener('mouseenter', pause);
         node.removeEventListener('mouseleave', resume);
         clearInterval(intervalRef.current);
       };
     }
-    return () => clearInterval(intervalRef.current);
-  }, [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing]);
+
+    // Default Cleanup
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+
+  }, {
+    scope: container,
+    dependencies: [cardDistance, verticalDistance, delay, pauseOnHover, skewAmount, easing]
+  });
 
   const rendered = childArr.map((child, i) =>
     isValidElement<CardProps>(child)
