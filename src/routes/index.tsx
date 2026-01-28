@@ -34,12 +34,14 @@ function Dashboard() {
   const { user } = useAuth()
   if (!user) return <Loading />
 
-  const { data } = useSuspenseQuery({
+  const { data, isFetching } = useSuspenseQuery({
     queryKey: ['dashboardStats', user.id],
     queryFn: () => getDashboardStats({ data: user.id }),
   })
 
   const { stats, recentActivity } = data
+
+  if (isFetching) return <Loading />
 
   return (
     <div className="p-4 md:p-8">
