@@ -7,7 +7,6 @@ import { getApplicationList } from '../features/yourList/server/application.serv
 import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
-import { Loading } from '@/features/common/components/Loading'
 
 const yourListSearchSchema = z.object({
   search: z.string().optional(),
