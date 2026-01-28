@@ -1,21 +1,60 @@
 import { createServerFn } from '@tanstack/react-start'
 import { z } from 'zod'
 import { prisma } from '@/db'
+import { Prisma } from '@/generated/prisma/client'
 import { ApplicationStatus, ApplicationMethod } from '@/generated/prisma/enums'
 
 export const getApplicationList = createServerFn({
   method: 'GET',
 })
-  .inputValidator((clerkId: string) => z.string().parse(clerkId))
-  .handler(async ({ data: clerkId }) => {
+  .inputValidator(
+    (data: {
+      clerkId: string
+      search?: string
+      status?: z.infer<typeof ApplicationStatus>[]
+    }) =>
+      z
+        .object({
+          clerkId: z.string(),
+          search: z.string().optional(),
+          status: z.array(z.nativeEnum(ApplicationStatus)).optional(),
+        })
+        .parse(data),
+  )
+  .handler(async ({ data }) => {
     const user = await prisma.users.findUnique({
-      where: { clerkId },
+      where: { clerkId: data.clerkId },
     })
 
     if (!user) return []
 
+    const where: Prisma.ApplicationsWhereInput = { userId: user.uuid }
+
+    if (data.search) {
+      where.OR = [
+        {
+          company_name: {
+            contains: data.search,
+            mode: 'insensitive',
+          },
+        },
+        {
+          job_title: {
+            contains: data.search,
+            mode: 'insensitive',
+          },
+        },
+      ]
+    }
+
+    if (data.status && data.status.length > 0) {
+      where.status = {
+        in: data.status,
+      }
+    }
+
     const jobs = await prisma.applications.findMany({
-      where: { userId: user.uuid },
+      where,
       include: { jobType: true },
       orderBy: { date_applied: 'desc' },
     })

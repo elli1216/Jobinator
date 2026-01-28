@@ -57,9 +57,7 @@ function JobCard({ application }: { application: Application }) {
       className="p-4 mb-2 bg-card rounded-lg border shadow-sm"
     >
       <p className="font-semibold">{application.company_name}</p>
-      <p className="text-sm text-muted-foreground">
-        {application.job_title}
-      </p>
+      <p className="text-sm text-muted-foreground">{application.job_title}</p>
     </div>
   )
 }
@@ -103,7 +101,7 @@ function BoardComponent() {
   const { data: applicationList, isLoading } = useQuery({
     queryKey: ['applications', user?.id],
     queryFn: () =>
-      getApplicationList({ data: user!.id }).then((res) => res || []),
+      getApplicationList({ data: { clerkId: user!.id } }).then((res) => res || []),
     enabled: !!user?.id,
   })
 
@@ -154,7 +152,7 @@ function BoardComponent() {
     },
     onError: (error) => {
       toast.error(`Failed to update status: ${error.message}`)
-    }
+    },
   })
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -179,7 +177,11 @@ function BoardComponent() {
       activeContainer === overContainer
     ) {
       // Reordering logic
-      if (activeContainer && overContainer && activeContainer === overContainer) {
+      if (
+        activeContainer &&
+        overContainer &&
+        activeContainer === overContainer
+      ) {
         setApplicationsByStatus((prev) => {
           const items = prev[activeContainer as ApplicationStatus]
           const oldIndex = items.findIndex((item) => item.uuid === activeId)

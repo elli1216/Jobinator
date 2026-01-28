@@ -1,29 +1,43 @@
-import { createFileRoute } from '@tanstack/react-router'
+import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
+import { z } from 'zod'
+import { ApplicationStatus } from '@/generated/prisma/enums'
 import ApplicationTable from '../features/yourList/components/applicationTable'
 import { getApplicationList } from '../features/yourList/server/application.server'
-import { Loading } from '@/features/common/components/Loading'
 import { useAuth } from '@/hooks/use-auth'
-import { useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
+import { Loading } from '@/features/common/components/Loading'
+
+const yourListSearchSchema = z.object({
+  search: z.string().optional(),
+  status: z.array(z.nativeEnum(ApplicationStatus)).optional(),
+})
+
+export type YourListSearchSchema = z.infer<typeof yourListSearchSchema>
 
 export const Route = createFileRoute('/your-list')({
   component: RouteComponent,
+  validateSearch: (search) => yourListSearchSchema.parse(search),
 })
 
 function RouteComponent() {
-  const { user, isLoaded } = useAuth()
-  const navigate = useNavigate()
+  const { user } = useAuth()
+  const navigate = useNavigate({ from: Route.fullPath })
+  const { search, status } = Route.useSearch()
 
-  const { data: applicationList, isLoading } = useQuery({
-    queryKey: ['applications', user?.id],
-    queryFn: () => getApplicationList({ data: user!.id }),
+  const { data: applicationList, isFetching } = useQuery({
+    queryKey: ['applications', user?.id, search, status],
+    queryFn: () =>
+      getApplicationList({
+        data: {
+          clerkId: user!.id,
+          search,
+          status,
+        },
+      }),
     enabled: !!user?.id,
   })
-  console.log(applicationList)
-
-  if (!isLoaded || isLoading) return <Loading />
 
   const handleAddNew = () => {
     navigate({ to: '/add-job' })
@@ -38,7 +52,12 @@ function RouteComponent() {
           <span>New</span>
         </Button>
       </div>
-      <ApplicationTable applicationList={applicationList || []} />
+      <ApplicationTable
+        applicationList={applicationList || []}
+        search={search}
+        status={status}
+        isLoading={isFetching}
+      />
     </div>
   )
 }

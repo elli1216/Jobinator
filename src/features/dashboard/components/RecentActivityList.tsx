@@ -31,9 +31,7 @@ export function RecentActivityList({ activity }: { activity: RecentActivity }) {
                 <p className="text-sm text-muted-foreground">{app.status}</p>
               </div>
               <div className="ml-auto font-medium">
-                {new Date(
-                  app.updatedAt ?? app.createdAt,
-                ).toLocaleDateString()}
+                {new Date(app.updatedAt ?? app.createdAt).toLocaleDateString()}
               </div>
             </div>
           ))}

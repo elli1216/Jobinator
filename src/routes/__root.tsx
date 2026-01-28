@@ -73,7 +73,7 @@ function RootDocument() {
       <head>
         <HeadContent />
       </head>
-      <body className='max-w-screen' suppressHydrationWarning>
+      <body className="max-w-screen" suppressHydrationWarning>
         {mounted ? (
           <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <ClerkProvider>
