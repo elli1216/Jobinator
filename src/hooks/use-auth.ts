@@ -8,7 +8,7 @@ export function useAuth() {
 
   useEffect(() => {
     if (isLoaded && !isSignedIn) {
-      navigate({ to: '/home', replace: true })
+      navigate({ to: '/landing', replace: true })
     }
   }, [isLoaded, isSignedIn, navigate])
 

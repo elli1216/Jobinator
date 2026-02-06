@@ -11,7 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as YourListRouteImport } from './routes/your-list'
 import { Route as LoginRouteImport } from './routes/login'
-import { Route as HomeRouteImport } from './routes/home'
+import { Route as LandingRouteImport } from './routes/landing'
 import { Route as BoardRouteImport } from './routes/board'
 import { Route as AddJobRouteImport } from './routes/add-job'
 import { Route as IndexRouteImport } from './routes/index'
@@ -27,9 +27,9 @@ const LoginRoute = LoginRouteImport.update({
   path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const HomeRoute = HomeRouteImport.update({
-  id: '/home',
-  path: '/home',
+const LandingRoute = LandingRouteImport.update({
+  id: '/landing',
+  path: '/landing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BoardRoute = BoardRouteImport.update({
@@ -57,7 +57,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/add-job': typeof AddJobRoute
   '/board': typeof BoardRoute
-  '/home': typeof HomeRoute
+  '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
   '/your-list': typeof YourListRoute
   '/edit-job/$uuid': typeof EditJobUuidRoute
@@ -66,7 +66,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/add-job': typeof AddJobRoute
   '/board': typeof BoardRoute
-  '/home': typeof HomeRoute
+  '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
   '/your-list': typeof YourListRoute
   '/edit-job/$uuid': typeof EditJobUuidRoute
@@ -76,7 +76,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/add-job': typeof AddJobRoute
   '/board': typeof BoardRoute
-  '/home': typeof HomeRoute
+  '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
   '/your-list': typeof YourListRoute
   '/edit-job/$uuid': typeof EditJobUuidRoute
@@ -87,7 +87,7 @@ export interface FileRouteTypes {
     | '/'
     | '/add-job'
     | '/board'
-    | '/home'
+    | '/landing'
     | '/login'
     | '/your-list'
     | '/edit-job/$uuid'
@@ -96,7 +96,7 @@ export interface FileRouteTypes {
     | '/'
     | '/add-job'
     | '/board'
-    | '/home'
+    | '/landing'
     | '/login'
     | '/your-list'
     | '/edit-job/$uuid'
@@ -105,7 +105,7 @@ export interface FileRouteTypes {
     | '/'
     | '/add-job'
     | '/board'
-    | '/home'
+    | '/landing'
     | '/login'
     | '/your-list'
     | '/edit-job/$uuid'
@@ -115,7 +115,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AddJobRoute: typeof AddJobRoute
   BoardRoute: typeof BoardRoute
-  HomeRoute: typeof HomeRoute
+  LandingRoute: typeof LandingRoute
   LoginRoute: typeof LoginRoute
   YourListRoute: typeof YourListRoute
   EditJobUuidRoute: typeof EditJobUuidRoute
@@ -137,11 +137,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/home': {
-      id: '/home'
-      path: '/home'
-      fullPath: '/home'
-      preLoaderRoute: typeof HomeRouteImport
+    '/landing': {
+      id: '/landing'
+      path: '/landing'
+      fullPath: '/landing'
+      preLoaderRoute: typeof LandingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/board': {
@@ -179,7 +179,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AddJobRoute: AddJobRoute,
   BoardRoute: BoardRoute,
-  HomeRoute: HomeRoute,
+  LandingRoute: LandingRoute,
   LoginRoute: LoginRoute,
   YourListRoute: YourListRoute,
   EditJobUuidRoute: EditJobUuidRoute,

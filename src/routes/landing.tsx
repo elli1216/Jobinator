@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
 import { Loading } from '@/features/common/components/Loading'
 
-export const Route = createFileRoute('/home')({
+export const Route = createFileRoute('/landing')({
   component: LandingPage,
 })
 
