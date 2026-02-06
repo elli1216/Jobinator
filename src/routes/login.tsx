@@ -9,7 +9,7 @@ export const Route = createFileRoute('/login')({
 
 function RouteComponent() {
   return (
-    <div className="flex items-center justify-center h-full m-auto p-4">
+    <div className="flex items-center justify-center h-screen m-auto p-4">
       <SignIn forceRedirectUrl="/user/home" />
     </div>
   )
