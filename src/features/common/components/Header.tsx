@@ -35,7 +35,7 @@ export default function Header() {
                 alt="Jobinator Logo"
                 className="inline-block h-8 w-8 mr-2"
               />
-              <Link to="/">Jobinator</Link>
+              <Link to="/landing">Jobinator</Link>
             </h1>
           </div>
           <div className="flex items-center gap-2">

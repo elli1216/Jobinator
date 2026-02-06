@@ -28,7 +28,7 @@ import {
 } from '@/components/ui/dropdown-menu'
 import { useDebounce } from '@/hooks/use-debounce'
 import { ApplicationStatus } from '@/generated/prisma/enums'
-import { YourListSearchSchema } from '@/routes/your-list'
+import { YourListSearchSchema } from '@/routes/user/your-list'
 import { Loading } from '@/features/common/components/Loading'
 
 const columnHelper = createColumnHelper<Application>()
@@ -45,7 +45,7 @@ export default function ApplicationTable({
   isLoading?: boolean
 }) {
   const { user } = useAuth()
-  const navigate = useNavigate({ from: '/your-list' })
+  const navigate = useNavigate({ from: '/user/your-list' })
   const queryClient = useQueryClient()
   const [searchTerm, setSearchTerm] = useState(search ?? '')
   const debouncedSearch = useDebounce(searchTerm, 500)
@@ -189,7 +189,7 @@ export default function ApplicationTable({
 
   const redirectToAddApplication = () => {
     navigate({
-      to: '/add-job',
+      to: '/user/add-job',
     })
   }
 

@@ -2,8 +2,8 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useQuery } from '@tanstack/react-query'
 import { z } from 'zod'
 import { ApplicationStatus } from '@/generated/prisma/enums'
-import ApplicationTable from '../features/yourList/components/applicationTable'
-import { getApplicationList } from '../features/yourList/server/application.server'
+import ApplicationTable from '@/features/yourList/components/applicationTable'
+import { getApplicationList } from '@/features/yourList/server/application.server'
 import { useAuth } from '@/hooks/use-auth'
 import { Button } from '@/components/ui/button'
 import { Plus } from 'lucide-react'
@@ -15,7 +15,7 @@ const yourListSearchSchema = z.object({
 
 export type YourListSearchSchema = z.infer<typeof yourListSearchSchema>
 
-export const Route = createFileRoute('/your-list')({
+export const Route = createFileRoute('/user/your-list')({
   component: RouteComponent,
   validateSearch: (search) => yourListSearchSchema.parse(search),
 })
@@ -39,7 +39,7 @@ function RouteComponent() {
   })
 
   const handleAddNew = () => {
-    navigate({ to: '/add-job' })
+    navigate({ to: '/user/add-job' })
   }
 
   return (

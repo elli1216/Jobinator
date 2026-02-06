@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
-import { useAuth } from '../hooks/use-auth'
+import { useAuth } from '../../hooks/use-auth'
 import { getDashboardStats } from '@/features/yourList/server/application.server'
 import { Briefcase, CheckCircle, Clock, FileText } from 'lucide-react'
 import { useSuspenseQuery } from '@tanstack/react-query'
@@ -9,7 +9,7 @@ import { RecentActivityList } from '@/features/dashboard/components/RecentActivi
 import { useEffect } from 'react'
 import { useUser } from '@clerk/clerk-react'
 
-export const Route = createFileRoute('/')({
+export const Route = createFileRoute('/user/home')({
   component: App,
 })
 

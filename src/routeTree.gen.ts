@@ -9,19 +9,14 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as YourListRouteImport } from './routes/your-list'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LandingRouteImport } from './routes/landing'
-import { Route as BoardRouteImport } from './routes/board'
-import { Route as AddJobRouteImport } from './routes/add-job'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as EditJobUuidRouteImport } from './routes/edit-job.$uuid'
+import { Route as UserYourListRouteImport } from './routes/user/your-list'
+import { Route as UserHomeRouteImport } from './routes/user/home'
+import { Route as UserBoardRouteImport } from './routes/user/board'
+import { Route as UserAddJobRouteImport } from './routes/user/add-job'
+import { Route as UserEditJobUuidRouteImport } from './routes/user/edit-job.$uuid'
 
-const YourListRoute = YourListRouteImport.update({
-  id: '/your-list',
-  path: '/your-list',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
@@ -32,104 +27,102 @@ const LandingRoute = LandingRouteImport.update({
   path: '/landing',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BoardRoute = BoardRouteImport.update({
-  id: '/board',
-  path: '/board',
+const UserYourListRoute = UserYourListRouteImport.update({
+  id: '/user/your-list',
+  path: '/user/your-list',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AddJobRoute = AddJobRouteImport.update({
-  id: '/add-job',
-  path: '/add-job',
+const UserHomeRoute = UserHomeRouteImport.update({
+  id: '/user/home',
+  path: '/user/home',
   getParentRoute: () => rootRouteImport,
 } as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+const UserBoardRoute = UserBoardRouteImport.update({
+  id: '/user/board',
+  path: '/user/board',
   getParentRoute: () => rootRouteImport,
 } as any)
-const EditJobUuidRoute = EditJobUuidRouteImport.update({
-  id: '/edit-job/$uuid',
-  path: '/edit-job/$uuid',
+const UserAddJobRoute = UserAddJobRouteImport.update({
+  id: '/user/add-job',
+  path: '/user/add-job',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserEditJobUuidRoute = UserEditJobUuidRouteImport.update({
+  id: '/user/edit-job/$uuid',
+  path: '/user/edit-job/$uuid',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/add-job': typeof AddJobRoute
-  '/board': typeof BoardRoute
   '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
-  '/your-list': typeof YourListRoute
-  '/edit-job/$uuid': typeof EditJobUuidRoute
+  '/user/add-job': typeof UserAddJobRoute
+  '/user/board': typeof UserBoardRoute
+  '/user/home': typeof UserHomeRoute
+  '/user/your-list': typeof UserYourListRoute
+  '/user/edit-job/$uuid': typeof UserEditJobUuidRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/add-job': typeof AddJobRoute
-  '/board': typeof BoardRoute
   '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
-  '/your-list': typeof YourListRoute
-  '/edit-job/$uuid': typeof EditJobUuidRoute
+  '/user/add-job': typeof UserAddJobRoute
+  '/user/board': typeof UserBoardRoute
+  '/user/home': typeof UserHomeRoute
+  '/user/your-list': typeof UserYourListRoute
+  '/user/edit-job/$uuid': typeof UserEditJobUuidRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/add-job': typeof AddJobRoute
-  '/board': typeof BoardRoute
   '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
-  '/your-list': typeof YourListRoute
-  '/edit-job/$uuid': typeof EditJobUuidRoute
+  '/user/add-job': typeof UserAddJobRoute
+  '/user/board': typeof UserBoardRoute
+  '/user/home': typeof UserHomeRoute
+  '/user/your-list': typeof UserYourListRoute
+  '/user/edit-job/$uuid': typeof UserEditJobUuidRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    | '/'
-    | '/add-job'
-    | '/board'
     | '/landing'
     | '/login'
-    | '/your-list'
-    | '/edit-job/$uuid'
+    | '/user/add-job'
+    | '/user/board'
+    | '/user/home'
+    | '/user/your-list'
+    | '/user/edit-job/$uuid'
   fileRoutesByTo: FileRoutesByTo
   to:
-    | '/'
-    | '/add-job'
-    | '/board'
     | '/landing'
     | '/login'
-    | '/your-list'
-    | '/edit-job/$uuid'
+    | '/user/add-job'
+    | '/user/board'
+    | '/user/home'
+    | '/user/your-list'
+    | '/user/edit-job/$uuid'
   id:
     | '__root__'
-    | '/'
-    | '/add-job'
-    | '/board'
     | '/landing'
     | '/login'
-    | '/your-list'
-    | '/edit-job/$uuid'
+    | '/user/add-job'
+    | '/user/board'
+    | '/user/home'
+    | '/user/your-list'
+    | '/user/edit-job/$uuid'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AddJobRoute: typeof AddJobRoute
-  BoardRoute: typeof BoardRoute
   LandingRoute: typeof LandingRoute
   LoginRoute: typeof LoginRoute
-  YourListRoute: typeof YourListRoute
-  EditJobUuidRoute: typeof EditJobUuidRoute
+  UserAddJobRoute: typeof UserAddJobRoute
+  UserBoardRoute: typeof UserBoardRoute
+  UserHomeRoute: typeof UserHomeRoute
+  UserYourListRoute: typeof UserYourListRoute
+  UserEditJobUuidRoute: typeof UserEditJobUuidRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/your-list': {
-      id: '/your-list'
-      path: '/your-list'
-      fullPath: '/your-list'
-      preLoaderRoute: typeof YourListRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/login': {
       id: '/login'
       path: '/login'
@@ -144,45 +137,52 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LandingRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/board': {
-      id: '/board'
-      path: '/board'
-      fullPath: '/board'
-      preLoaderRoute: typeof BoardRouteImport
+    '/user/your-list': {
+      id: '/user/your-list'
+      path: '/user/your-list'
+      fullPath: '/user/your-list'
+      preLoaderRoute: typeof UserYourListRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/add-job': {
-      id: '/add-job'
-      path: '/add-job'
-      fullPath: '/add-job'
-      preLoaderRoute: typeof AddJobRouteImport
+    '/user/home': {
+      id: '/user/home'
+      path: '/user/home'
+      fullPath: '/user/home'
+      preLoaderRoute: typeof UserHomeRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+    '/user/board': {
+      id: '/user/board'
+      path: '/user/board'
+      fullPath: '/user/board'
+      preLoaderRoute: typeof UserBoardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/edit-job/$uuid': {
-      id: '/edit-job/$uuid'
-      path: '/edit-job/$uuid'
-      fullPath: '/edit-job/$uuid'
-      preLoaderRoute: typeof EditJobUuidRouteImport
+    '/user/add-job': {
+      id: '/user/add-job'
+      path: '/user/add-job'
+      fullPath: '/user/add-job'
+      preLoaderRoute: typeof UserAddJobRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/user/edit-job/$uuid': {
+      id: '/user/edit-job/$uuid'
+      path: '/user/edit-job/$uuid'
+      fullPath: '/user/edit-job/$uuid'
+      preLoaderRoute: typeof UserEditJobUuidRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  AddJobRoute: AddJobRoute,
-  BoardRoute: BoardRoute,
   LandingRoute: LandingRoute,
   LoginRoute: LoginRoute,
-  YourListRoute: YourListRoute,
-  EditJobUuidRoute: EditJobUuidRoute,
+  UserAddJobRoute: UserAddJobRoute,
+  UserBoardRoute: UserBoardRoute,
+  UserHomeRoute: UserHomeRoute,
+  UserYourListRoute: UserYourListRoute,
+  UserEditJobUuidRoute: UserEditJobUuidRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

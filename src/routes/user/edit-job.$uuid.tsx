@@ -1,13 +1,20 @@
 import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { toast } from 'sonner'
-import { applicationSchema } from '../features/addJob/schema/addJob.schema'
-import { useAuth } from '../hooks/use-auth'
-import { addJob, getJobTypes } from '../features/addJob/server/addJob.server'
-import type { ApplicationSchema } from '../features/addJob/schema/addJob.schema'
-import { Button } from '@/components/ui/button'
+import {
+  applicationSchema,
+  type ApplicationSchema,
+} from '@/features/addJob/schema/addJob.schema'
+import { getJobById } from '@/features/editJob/server/editJob.server'
+import { useAuth } from '@/hooks/use-auth'
+import { Loading } from '@/features/common/components/Loading'
+import Error from '@/features/common/components/Error'
+import { ApplicationStatus, ApplicationMethod } from '@/generated/prisma/enums'
+import { getJobTypes } from '@/features/addJob/server/addJob.server'
 import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
 import {
   Select,
   SelectContent,
@@ -15,13 +22,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { ApplicationStatus, ApplicationMethod } from '@/generated/prisma/enums'
-import { Loading } from '@/features/common/components/Loading'
-import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { Applications, JobTypes } from '@/generated/prisma/client'
+import { editJob } from '@/features/editJob/server/editJob.server'
 import { Textarea } from '@/components/ui/textarea'
 import { useRouter } from '@tanstack/react-router'
 
-export const Route = createFileRoute('/add-job')({
+export const Route = createFileRoute('/user/edit-job/$uuid')({
   component: RouteComponent,
   loader: async () => {
     const jobTypes = await getJobTypes()
@@ -31,60 +37,87 @@ export const Route = createFileRoute('/add-job')({
 })
 
 function RouteComponent() {
+  const { uuid } = Route.useParams()
+  const { user } = useAuth()
   const { jobTypes } = Route.useLoaderData()
-  const { user, isLoaded } = useAuth()
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['job', uuid],
+    queryFn: async () =>
+      getJobById({ data: { applicationId: uuid, clerkId: user?.id! } }),
+  })
+
+  if (isLoading) return <Loading />
+  if (error) return <Error error={error} />
+  if (!data) return <Error error="Job not found" />
+
+  return <JobForm data={data} jobTypes={jobTypes} user={{ id: user?.id! }} />
+}
+
+function JobForm({
+  data,
+  jobTypes,
+  user,
+}: {
+  data: Applications
+  jobTypes: JobTypes[]
+  user: { id: string }
+}) {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
   const router = useRouter()
 
-  if (!isLoaded) return <Loading />
-
   const {
+    formState: { errors, isDirty },
     register,
     handleSubmit,
     control,
-    formState: { errors },
   } = useForm<ApplicationSchema>({
     resolver: zodResolver(applicationSchema),
     defaultValues: {
-      status: ApplicationStatus.To_Apply,
-      job_link: '',
-      notes: '',
-      application_method: ApplicationMethod.Walk_in,
-      company_name: '',
-      company_location: '',
-      job_title: '',
-      date_applied: '',
-      jobTypeId: '',
+      company_name: data.company_name,
+      company_location: data.company_location,
+      job_title: data.job_title,
+      application_method: data.application_method,
+      date_applied: data.date_applied
+        ? new Date(data.date_applied).toISOString().split('T')[0]
+        : '',
+      status: data.status,
+      job_link: data.job_link || '',
+      notes: data.notes || '',
+      jobTypeId: data.jobTypeId,
     },
   })
 
-  const { mutate: addMutation, isPending } = useMutation({
-    mutationFn: addJob,
+  const { mutate: editMutation, isPending } = useMutation({
+    mutationFn: editJob,
     onSuccess: async () =>
       toast.promise(
         queryClient.invalidateQueries({ queryKey: ['applications'] }),
         {
-          loading: 'Adding job application...',
-          success: 'Job application added successfully',
-          error: 'Failed to add job application',
+          loading: 'Updating job application...',
+          success: 'Job application updated successfully',
+          error: 'Failed to update job application',
         },
       ),
     onError: (error) => {
-      console.error('Failed to add job:', error)
+      console.error('Failed to update job application', error)
     },
   })
 
-  const onSubmit = (data: ApplicationSchema) => {
-    if (!user?.id) return
-    addMutation({
+  const onSubmit = (formData: ApplicationSchema) => {
+    editMutation({
       data: {
-        ...data,
+        applicationData: {
+          ...data,
+          ...formData,
+          date_applied: new Date(formData.date_applied!),
+        },
         clerkId: user.id,
       },
     })
     router.invalidate({ sync: true })
-    navigate({ to: '/your-list' })
+    navigate({ to: '/user/your-list' })
   }
 
   return (
@@ -113,7 +146,7 @@ function RouteComponent() {
 
             <div>
               <label
-                htmlFor="company_location"
+                htmlFor="company_name"
                 className="block text-sm font-medium"
               >
                 Location
@@ -228,7 +261,7 @@ function RouteComponent() {
             <label htmlFor="job_link" className="block text-sm font-medium">
               Job Link
             </label>
-            <Input id="job_link" {...register('job_link')} className="mt-1" />
+            <Input id="job_link" {...register("job_link")} className="mt-1" />
             {errors.job_link && (
               <p className="text-sm text-red-600 mt-1">
                 {errors.job_link.message}
@@ -281,10 +314,16 @@ function RouteComponent() {
               </p>
             )}
           </div>
-
-          <div>
-            <Button disabled={isPending} type="submit">
-              Add Application
+          <div className="flex gap-2">
+            <Button
+              onClick={() => window.history.back()}
+              disabled={isPending}
+              type="button"
+            >
+              Back
+            </Button>
+            <Button type="submit" disabled={isPending || !isDirty}>
+              Save Changes
             </Button>
           </div>
         </form>

@@ -26,7 +26,7 @@ import { ApplicationStatus } from '@/generated/prisma/enums'
 import { useMemo, useState, useEffect } from 'react'
 import { toast } from 'sonner'
 
-export const Route = createFileRoute('/board')({
+export const Route = createFileRoute('/user/board')({
   component: BoardComponent,
 })
 
