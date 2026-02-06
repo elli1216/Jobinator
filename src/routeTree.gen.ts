@@ -11,6 +11,8 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LandingRouteImport } from './routes/landing'
+import { Route as UserRouteRouteImport } from './routes/user/route'
+import { Route as IndexRouteImport } from './routes/index'
 import { Route as UserYourListRouteImport } from './routes/user/your-list'
 import { Route as UserHomeRouteImport } from './routes/user/home'
 import { Route as UserBoardRouteImport } from './routes/user/board'
@@ -27,33 +29,45 @@ const LandingRoute = LandingRouteImport.update({
   path: '/landing',
   getParentRoute: () => rootRouteImport,
 } as any)
-const UserYourListRoute = UserYourListRouteImport.update({
-  id: '/user/your-list',
-  path: '/user/your-list',
+const UserRouteRoute = UserRouteRouteImport.update({
+  id: '/user',
+  path: '/user',
   getParentRoute: () => rootRouteImport,
+} as any)
+const IndexRoute = IndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const UserYourListRoute = UserYourListRouteImport.update({
+  id: '/your-list',
+  path: '/your-list',
+  getParentRoute: () => UserRouteRoute,
 } as any)
 const UserHomeRoute = UserHomeRouteImport.update({
-  id: '/user/home',
-  path: '/user/home',
-  getParentRoute: () => rootRouteImport,
+  id: '/home',
+  path: '/home',
+  getParentRoute: () => UserRouteRoute,
 } as any)
 const UserBoardRoute = UserBoardRouteImport.update({
-  id: '/user/board',
-  path: '/user/board',
-  getParentRoute: () => rootRouteImport,
+  id: '/board',
+  path: '/board',
+  getParentRoute: () => UserRouteRoute,
 } as any)
 const UserAddJobRoute = UserAddJobRouteImport.update({
-  id: '/user/add-job',
-  path: '/user/add-job',
-  getParentRoute: () => rootRouteImport,
+  id: '/add-job',
+  path: '/add-job',
+  getParentRoute: () => UserRouteRoute,
 } as any)
 const UserEditJobUuidRoute = UserEditJobUuidRouteImport.update({
-  id: '/user/edit-job/$uuid',
-  path: '/user/edit-job/$uuid',
-  getParentRoute: () => rootRouteImport,
+  id: '/edit-job/$uuid',
+  path: '/edit-job/$uuid',
+  getParentRoute: () => UserRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof IndexRoute
+  '/user': typeof UserRouteRouteWithChildren
   '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
   '/user/add-job': typeof UserAddJobRoute
@@ -63,6 +77,8 @@ export interface FileRoutesByFullPath {
   '/user/edit-job/$uuid': typeof UserEditJobUuidRoute
 }
 export interface FileRoutesByTo {
+  '/': typeof IndexRoute
+  '/user': typeof UserRouteRouteWithChildren
   '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
   '/user/add-job': typeof UserAddJobRoute
@@ -73,6 +89,8 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/': typeof IndexRoute
+  '/user': typeof UserRouteRouteWithChildren
   '/landing': typeof LandingRoute
   '/login': typeof LoginRoute
   '/user/add-job': typeof UserAddJobRoute
@@ -84,6 +102,8 @@ export interface FileRoutesById {
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
+    | '/user'
     | '/landing'
     | '/login'
     | '/user/add-job'
@@ -93,6 +113,8 @@ export interface FileRouteTypes {
     | '/user/edit-job/$uuid'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/'
+    | '/user'
     | '/landing'
     | '/login'
     | '/user/add-job'
@@ -102,6 +124,8 @@ export interface FileRouteTypes {
     | '/user/edit-job/$uuid'
   id:
     | '__root__'
+    | '/'
+    | '/user'
     | '/landing'
     | '/login'
     | '/user/add-job'
@@ -112,13 +136,10 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  IndexRoute: typeof IndexRoute
+  UserRouteRoute: typeof UserRouteRouteWithChildren
   LandingRoute: typeof LandingRoute
   LoginRoute: typeof LoginRoute
-  UserAddJobRoute: typeof UserAddJobRoute
-  UserBoardRoute: typeof UserBoardRoute
-  UserHomeRoute: typeof UserHomeRoute
-  UserYourListRoute: typeof UserYourListRoute
-  UserEditJobUuidRoute: typeof UserEditJobUuidRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -137,52 +158,83 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LandingRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/user': {
+      id: '/user'
+      path: '/user'
+      fullPath: '/user'
+      preLoaderRoute: typeof UserRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/': {
+      id: '/'
+      path: '/'
+      fullPath: '/'
+      preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/user/your-list': {
       id: '/user/your-list'
-      path: '/user/your-list'
+      path: '/your-list'
       fullPath: '/user/your-list'
       preLoaderRoute: typeof UserYourListRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof UserRouteRoute
     }
     '/user/home': {
       id: '/user/home'
-      path: '/user/home'
+      path: '/home'
       fullPath: '/user/home'
       preLoaderRoute: typeof UserHomeRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof UserRouteRoute
     }
     '/user/board': {
       id: '/user/board'
-      path: '/user/board'
+      path: '/board'
       fullPath: '/user/board'
       preLoaderRoute: typeof UserBoardRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof UserRouteRoute
     }
     '/user/add-job': {
       id: '/user/add-job'
-      path: '/user/add-job'
+      path: '/add-job'
       fullPath: '/user/add-job'
       preLoaderRoute: typeof UserAddJobRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof UserRouteRoute
     }
     '/user/edit-job/$uuid': {
       id: '/user/edit-job/$uuid'
-      path: '/user/edit-job/$uuid'
+      path: '/edit-job/$uuid'
       fullPath: '/user/edit-job/$uuid'
       preLoaderRoute: typeof UserEditJobUuidRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof UserRouteRoute
     }
   }
 }
 
-const rootRouteChildren: RootRouteChildren = {
-  LandingRoute: LandingRoute,
-  LoginRoute: LoginRoute,
+interface UserRouteRouteChildren {
+  UserAddJobRoute: typeof UserAddJobRoute
+  UserBoardRoute: typeof UserBoardRoute
+  UserHomeRoute: typeof UserHomeRoute
+  UserYourListRoute: typeof UserYourListRoute
+  UserEditJobUuidRoute: typeof UserEditJobUuidRoute
+}
+
+const UserRouteRouteChildren: UserRouteRouteChildren = {
   UserAddJobRoute: UserAddJobRoute,
   UserBoardRoute: UserBoardRoute,
   UserHomeRoute: UserHomeRoute,
   UserYourListRoute: UserYourListRoute,
   UserEditJobUuidRoute: UserEditJobUuidRoute,
+}
+
+const UserRouteRouteWithChildren = UserRouteRoute._addFileChildren(
+  UserRouteRouteChildren,
+)
+
+const rootRouteChildren: RootRouteChildren = {
+  IndexRoute: IndexRoute,
+  UserRouteRoute: UserRouteRouteWithChildren,
+  LandingRoute: LandingRoute,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -4,7 +4,7 @@ import {
   getApplicationList,
   updateApplicationStatus,
   Application,
-} from '../features/yourList/server/application.server'
+} from '@/features/yourList/server/application.server'
 import { Loading } from '@/features/common/components/Loading'
 import { useAuth } from '@/hooks/use-auth'
 import {

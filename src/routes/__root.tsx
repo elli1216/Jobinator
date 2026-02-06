@@ -18,7 +18,6 @@ import { ThemeProvider } from '../features/common/components/theme-provider'
 import { UserSync } from '../features/auth/components/UserSync'
 import type { QueryClient } from '@tanstack/react-query'
 import { Loading } from '@/features/common/components/Loading'
-import { HomeLayout } from '@/features/common/components/HomeLayout'
 import NotFound from '@/features/common/components/NotFound'
 import ErrorComponent from '@/features/common/components/Error'
 import { Toaster } from '@/components/ui/sonner'
@@ -77,25 +76,23 @@ function RootDocument() {
         {mounted ? (
           <ThemeProvider defaultTheme="system" storageKey="vite-ui-theme">
             <ClerkProvider>
-              <HomeLayout>
-                <Toaster position="top-center" />
-                <UserSync />
-                <div className="flex-1 overflow-hidden">
-                  <Outlet />
-                </div>
-                <TanStackDevtools
-                  config={{
-                    position: 'bottom-right',
-                  }}
-                  plugins={[
-                    {
-                      name: 'Tanstack Router',
-                      render: <TanStackRouterDevtoolsPanel />,
-                    },
-                    TanStackQueryDevtools,
-                  ]}
-                />
-              </HomeLayout>
+              <Toaster position="top-center" />
+              <UserSync />
+              <div className="flex-1 overflow-hidden">
+                <Outlet />
+              </div>
+              <TanStackDevtools
+                config={{
+                  position: 'bottom-right',
+                }}
+                plugins={[
+                  {
+                    name: 'Tanstack Router',
+                    render: <TanStackRouterDevtoolsPanel />,
+                  },
+                  TanStackQueryDevtools,
+                ]}
+              />
             </ClerkProvider>
           </ThemeProvider>
         ) : (

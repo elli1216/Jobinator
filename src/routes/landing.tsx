@@ -1,7 +1,9 @@
-import { createFileRoute, Link } from '@tanstack/react-router'
+import { createFileRoute, Link, useNavigate } from '@tanstack/react-router'
 import { Button } from '@/components/ui/button'
 import { useEffect, useState } from 'react'
 import { Loading } from '@/features/common/components/Loading'
+import { useUser } from '@clerk/clerk-react'
+import Header from '@/features/common/components/Header'
 
 export const Route = createFileRoute('/landing')({
   component: LandingPage,
@@ -9,15 +11,26 @@ export const Route = createFileRoute('/landing')({
 
 function LandingPage() {
   const [mounted, setMounted] = useState(false)
+  const { isLoaded, isSignedIn } = useUser()
+  const navigate = useNavigate()
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
-  if (!mounted) return <Loading />
+  useEffect(() => {
+    if (isLoaded && isSignedIn) {
+      navigate({ to: '/user/home', replace: true })
+    }
+  }, [isLoaded, isSignedIn, navigate])
+
+  if (!mounted || !isLoaded) return <Loading />
+
+  if (isSignedIn) return null
 
   return (
     <div className="bg-background text-foreground md:pb-20">
+      <Header />
       {/* Hero Section */}
       <section className="flex flex-col md:flex-row md:relative h-130 text-center px-4">
         <div className="flex flex-col items-center justify-center px-20 pt-25 md:pt-12">

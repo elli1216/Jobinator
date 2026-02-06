@@ -1,8 +1,6 @@
-import { Link } from '@tanstack/react-router'
 import { SignOutButton } from '@clerk/clerk-react'
 import { LogOut, User } from 'lucide-react'
-import { ModeToggle } from './mode-toggle'
-import { Button } from '@/components/ui/button'
+import { SidebarTrigger } from '@/components/ui/sidebar'
 import { useAuth } from '@/hooks/use-auth'
 import {
   Tooltip,
@@ -18,15 +16,19 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
+import { Link } from '@tanstack/react-router'
+import { ModeToggle } from '@/features/common/components/mode-toggle'
+import { Button } from '@/components/ui/button'
 
-export default function Header() {
-  const { isSignedIn, user } = useAuth()
+export default function UserHeader() {
+  const { user, isLoaded } = useAuth()
 
   return (
     <>
       <header className="p-4 flex items-center bg-accent text-content shadow-lg">
         <div className="flex items-center justify-between w-full">
           <div className="flex items-center gap-4">
+            {isLoaded && <SidebarTrigger />}
             <h1 className="text-xl font-semibold">
               <img
                 src="/jobinator.png"
@@ -38,7 +40,7 @@ export default function Header() {
           </div>
           <div className="flex items-center gap-2">
             <ModeToggle />
-            {isSignedIn ? (
+            {isLoaded ? (
               <div className="flex items-center gap-2 mr-5">
                 <Tooltip>
                   <TooltipTrigger>
@@ -78,9 +80,7 @@ export default function Header() {
                 </AlertDialog>
               </div>
             ) : (
-              <Link to="/login">
-                <Button variant="outline">Login</Button>
-              </Link>
+              null
             )}
           </div>
         </div>

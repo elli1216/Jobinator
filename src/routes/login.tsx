@@ -10,7 +10,7 @@ export const Route = createFileRoute('/login')({
 function RouteComponent() {
   return (
     <div className="flex items-center justify-center h-full m-auto p-4">
-      <SignIn />
+      <SignIn forceRedirectUrl="/user/home" />
     </div>
   )
 }

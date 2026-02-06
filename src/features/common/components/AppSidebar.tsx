@@ -11,22 +11,22 @@ import {
 const items = [
   {
     title: 'Home',
-    to: '/',
+    to: '/user/home',
     icon: Home,
   },
   {
     title: 'Add New Job',
-    to: '/add-job',
+    to: '/user/add-job',
     icon: PlusCircleIcon,
   },
   {
     title: 'Your List',
-    to: '/your-list',
+    to: '/user/your-list',
     icon: List,
   },
   {
     title: 'Board',
-    to: '/board',
+    to: '/user/board',
     icon: LayoutGrid,
   },
 ]
